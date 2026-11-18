@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-dhow-canvas: #F8F5EE;
+  --color-pearl-shell: #FFFCF7;
+  --color-pearl-border: #E5DEC9;
+  --color-indigo-ocean: #1E3A5F;
+  --color-indigo-deep: #13243C;
+  --color-reef-pink: #DE546A;
+  --color-reef-deep: #B8354B;
+  --color-reef-tint: #FDF1F3;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: #F8F5EE;
+    color: #13243C;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+}
+
+.blueprint-grid {
+  background-image:
+    linear-gradient(to right, rgba(30, 58, 95, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 58, 95, 0.055) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.blueprint-grid-fine {
+  background-image:
+    linear-gradient(to right, rgba(30, 58, 95, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 58, 95, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}

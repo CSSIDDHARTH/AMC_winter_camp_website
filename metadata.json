@@ -1,0 +1,6 @@
+{
+  "name": "AMC Winter Camp 2026–27",
+  "description": "Official educational learning platform for the Aeromodelling Club, IIT (BHU) Varanasi Winter Camp 2026–27 covering CAD, ROS 2, and UAV component selection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
