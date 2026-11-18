@@ -36,24 +36,22 @@ function WaypointNode({ week, index }: WaypointNodeProps) {
       ref={nodeRef}
       className="relative scroll-mt-24 grid grid-cols-1 items-center gap-6 md:grid-cols-11 md:gap-0"
     >
-      {/* Left Desktop Card Slot */}
+      {/* Single Week Card Slot (alternates left/right on desktop via order) */}
       <div
-        className={`md:col-span-5 ${
-          isLeftOnDesktop ? 'md:pr-8 order-2 md:order-1' : 'hidden md:block md:order-1'
+        className={`order-2 md:col-span-5 ${
+          isLeftOnDesktop ? 'md:order-1 md:pr-8' : 'md:order-3 md:pl-8'
         }`}
       >
-        {isLeftOnDesktop && (
-          <motion.div
-            style={prefersReducedMotion ? undefined : { scale, y, opacity }}
-            className="will-change-transform"
-          >
-            <WeekCard week={week} waypointLabel={`WP-0${week.id}`} />
-          </motion.div>
-        )}
+        <motion.div
+          style={prefersReducedMotion ? undefined : { scale, y, opacity }}
+          className="will-change-transform"
+        >
+          <WeekCard week={week} waypointLabel={`WP-0${week.id}`} />
+        </motion.div>
       </div>
 
       {/* Central Flight-Map Waypoint Pin & Vector Connectors */}
-      <div className="relative z-10 flex items-center gap-4 md:col-span-1 md:justify-center order-1 md:order-2">
+      <div className="relative z-10 order-1 flex items-center gap-4 md:col-span-1 md:order-2 md:justify-center">
         <div
           aria-hidden="true"
           className={`hidden md:block absolute top-1/2 h-px w-8 border-t-2 border-dashed border-[#DE546A]/55 ${
@@ -86,21 +84,13 @@ function WaypointNode({ week, index }: WaypointNodeProps) {
         </div>
       </div>
 
-      {/* Right Desktop Card Slot */}
+      {/* Empty Opposite Column Spacer (desktop only) */}
       <div
-        className={`md:col-span-5 ${
-          !isLeftOnDesktop
-            ? 'md:pl-8 order-2 md:order-3'
-            : 'md:hidden order-2'
+        aria-hidden="true"
+        className={`hidden md:block md:col-span-5 ${
+          isLeftOnDesktop ? 'md:order-3' : 'md:order-1'
         }`}
-      >
-        <motion.div
-          style={prefersReducedMotion ? undefined : { scale, y, opacity }}
-          className="will-change-transform"
-        >
-          <WeekCard week={week} waypointLabel={`WP-0${week.id}`} />
-        </motion.div>
-      </div>
+      />
     </div>
   );
 }

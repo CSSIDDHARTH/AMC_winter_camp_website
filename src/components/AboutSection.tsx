@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { Compass, Plane, SlidersHorizontal, Wrench } from 'lucide-react';
+import { Compass, SlidersHorizontal, Trophy, Wrench } from 'lucide-react';
 
 const PILLARS = [
   {
@@ -25,10 +25,10 @@ const PILLARS = [
   },
   {
     index: '04.',
-    title: 'Flight Integration',
+    title: 'Compete & Rank',
     description:
-      'Connect mechanical CAD, ROS 2 autonomy, and hardware selection into cohesive aerial system workflows.',
-    icon: Plane,
+      'Submit weekly deliverables, earn evaluation scores, and climb the camp leaderboard against fellow builders.',
+    icon: Trophy,
   },
 ];
 
