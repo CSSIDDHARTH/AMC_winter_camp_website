@@ -11,8 +11,8 @@ export function NotFoundPage() {
         <p className="font-mono text-xs font-semibold tracking-wider text-[#B8354B]">
           404
         </p>
-        <h1 className="mt-2 font-display text-2xl font-bold text-[#13243C] sm:text-3xl">
-          Page Not Found
+        <h1 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.025em] text-[#13243C] sm:text-4xl">
+          Page <span className="text-[#B8354B]">Not Found</span>
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-[#4B5E77]">
           The requested page does not exist in the AMC Winter Camp curriculum.

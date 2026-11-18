@@ -22,8 +22,8 @@ export function LeaderboardPage({ entries = [] }: LeaderboardPageProps) {
             <Trophy className="h-8 w-8 text-[#B8354B]" aria-hidden="true" />
           </div>
 
-          <h1 className="font-display text-2xl font-bold tracking-tight text-[#13243C] sm:text-3xl text-balance">
-            Leaderboard Coming Soon
+          <h1 className="font-display text-3xl font-extrabold tracking-[-0.025em] text-[#13243C] sm:text-4xl text-balance">
+            Leaderboard <span className="text-[#B8354B]">Coming Soon</span>
           </h1>
 
           <p className="mt-4 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
@@ -50,8 +50,8 @@ export function LeaderboardPage({ entries = [] }: LeaderboardPageProps) {
       <div className="mx-auto max-w-6xl space-y-8">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#E5DEC9] pb-6">
           <div className="space-y-2">
-            <h1 className="font-display text-2xl font-bold tracking-tight text-[#13243C] sm:text-3xl">
-              Winter Camp Leaderboard
+            <h1 className="font-display text-3xl font-extrabold tracking-[-0.025em] text-[#13243C] sm:text-4xl">
+              Winter Camp <span className="text-[#B8354B]">Leaderboard</span>
             </h1>
             <p className="text-sm text-[#4B5E77]">
               Participant rankings and task-wise performance across released weeks.

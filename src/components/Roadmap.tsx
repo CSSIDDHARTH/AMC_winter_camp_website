@@ -284,14 +284,18 @@ export function Roadmap() {
         {/* Section Header + Flight Route Overview Bar */}
         <div className="mb-14 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[#B8354B] uppercase">
+            <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-wide text-[#B8354B]">
               <Navigation className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Flight Plan · 1 Dec – 21 Dec · 03 Waypoints</span>
             </div>
-            <h2 className="font-display text-2xl font-semibold tracking-tight text-[#13243C] sm:text-3xl text-balance">
-              Three-Week Curriculum Roadmap
+            <h2 className="font-display text-3xl font-extrabold tracking-[-0.025em] leading-[1.08] text-[#13243C] sm:text-4xl text-balance">
+              Three-Week Curriculum <span className="text-[#B8354B]">Roadmap</span>
             </h2>
-            <p className="text-sm leading-relaxed text-[#4B5E77] sm:text-base">
+            <div
+              aria-hidden="true"
+              className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#DE546A] to-[#1E3A5F]"
+            />
+            <p className="pt-1 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
               Scroll along the camp route to approach each weekly waypoint—progressing from
               parametric CAD design and ROS 2 autonomy to full UAV component integration.
             </p>

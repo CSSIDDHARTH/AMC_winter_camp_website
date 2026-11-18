@@ -91,7 +91,7 @@ export function HeroSection() {
       {/* Multi-Depth Winter Snow Particles */}
       <WinterSnowfall />
 
-      <div className="relative z-20 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <div className="relative z-20 mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 lg:px-8 lg:pt-36 lg:pb-28">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -105,13 +105,23 @@ export function HeroSection() {
               <span>Indian Institute of Technology (BHU), Varanasi</span>
             </div>
 
-            <div className="space-y-3">
-              <h1 className="font-display text-4xl font-bold tracking-tight text-[#13243C] sm:text-5xl lg:text-[3.55rem] lg:leading-[1.06] text-balance">
-                AMC WINTER CAMP 2026–27
+            <div className="space-y-3.5">
+              <h1 className="font-display text-4xl font-extrabold tracking-[-0.03em] text-[#13243C] sm:text-5xl lg:text-[4rem] lg:leading-[1.02] text-balance">
+                AMC{' '}
+                <span className="bg-gradient-to-r from-[#13243C] via-[#1E3A5F] to-[#B8354B] bg-clip-text text-transparent">
+                  WINTER CAMP
+                </span>{' '}
+                <span className="text-[#B8354B]">2026–27</span>
               </h1>
-              <p className="font-mono text-base font-semibold tracking-wide text-[#B8354B] sm:text-lg">
-                1 Dec – 21 Dec
-              </p>
+              <div className="flex items-center gap-3 pt-0.5">
+                <span
+                  aria-hidden="true"
+                  className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#DE546A] to-[#1E3A5F]"
+                />
+                <p className="font-mono text-base font-semibold tracking-wide text-[#B8354B] sm:text-lg">
+                  1 Dec – 21 Dec
+                </p>
+              </div>
             </div>
 
             <p className="max-w-xl text-base leading-relaxed text-[#253852] sm:text-lg">

@@ -30,32 +30,41 @@ function ScrollHandler() {
   return null;
 }
 
+function AppShell() {
+  const { pathname } = useLocation();
+  const isHome = pathname === '/';
+
+  return (
+    <div className="flex min-h-screen bg-[#F8F5EE] text-[#13243C]">
+      <Sidebar />
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        <Navbar />
+
+        <main className={isHome ? '-mt-13 flex-1' : 'flex-1'}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/week/:weekId" element={<WeekPage section="instructions" />} />
+            <Route path="/week/:weekId/instructions" element={<WeekPage section="instructions" />} />
+            <Route path="/week/:weekId/tasks" element={<WeekPage section="tasks" />} />
+            <Route path="/week/:weekId/submission" element={<WeekPage section="submission" />} />
+            <Route path="/leaderboard" element={<LeaderboardPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </main>
+
+        <Footer />
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <BrowserRouter>
         <ScrollHandler />
-        <div className="flex min-h-screen bg-[#F8F5EE] text-[#13243C]">
-          <Sidebar />
-
-          <div className="flex min-w-0 flex-1 flex-col">
-            <Navbar />
-
-            <main className="flex-1">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/week/:weekId" element={<WeekPage section="instructions" />} />
-                <Route path="/week/:weekId/instructions" element={<WeekPage section="instructions" />} />
-                <Route path="/week/:weekId/tasks" element={<WeekPage section="tasks" />} />
-                <Route path="/week/:weekId/submission" element={<WeekPage section="submission" />} />
-                <Route path="/leaderboard" element={<LeaderboardPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </main>
-
-            <Footer />
-          </div>
-        </div>
+        <AppShell />
       </BrowserRouter>
     </MotionConfig>
   );

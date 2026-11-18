@@ -84,7 +84,7 @@ function FlowCard({ item, index }: FlowCardProps) {
           />
         </div>
 
-        <h3 className="font-display text-base font-semibold text-[#13243C]">
+        <h3 className="font-display text-base font-bold tracking-tight text-[#13243C] transition-colors group-hover:text-[#B8354B]">
           {item.title}
         </h3>
         <p className="mt-2 text-sm leading-relaxed text-[#4B5E77]">
@@ -104,10 +104,19 @@ export function WorkflowSection() {
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl space-y-3">
-            <h2 className="font-display text-2xl font-semibold tracking-tight text-[#13243C] sm:text-3xl text-balance">
-              How the Camp Works
+            <div className="flex items-center gap-2 font-mono text-xs font-semibold tracking-wide text-[#B8354B]">
+              <span>Weekly Cycle</span>
+              <span aria-hidden="true" className="text-[#C8BFA8]">·</span>
+              <span className="text-[#5A6C84]">05 Stages</span>
+            </div>
+            <h2 className="font-display text-3xl font-extrabold tracking-[-0.025em] leading-[1.08] text-[#13243C] sm:text-4xl text-balance">
+              How the Camp <span className="text-[#B8354B]">Works</span>
             </h2>
-            <p className="text-sm leading-relaxed text-[#4B5E77] sm:text-base">
+            <div
+              aria-hidden="true"
+              className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#DE546A] to-[#1E3A5F]"
+            />
+            <p className="pt-1 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
               Each weekly module follows a structured five-stage engineering workflow from initial setup to leaderboard evaluation.
             </p>
           </div>

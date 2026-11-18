@@ -37,7 +37,7 @@ export function WeekLayout({ week, section, content }: WeekLayoutProps) {
               <p className="font-mono text-xs font-semibold tracking-wider text-[#B8354B]">
                 WEEK 0{week.id}
               </p>
-              <h1 className="font-display text-2xl font-bold tracking-tight text-[#13243C] sm:text-3xl">
+              <h1 className="font-display text-3xl font-extrabold tracking-[-0.025em] text-[#13243C] sm:text-4xl">
                 {week.title}
               </h1>
               <p className="max-w-2xl text-sm text-[#4B5E77]">{week.description}</p>

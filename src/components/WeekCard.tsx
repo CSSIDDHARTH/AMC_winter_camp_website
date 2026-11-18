@@ -33,7 +33,7 @@ export function WeekCard({ week, waypointLabel }: WeekCardProps) {
           <WeekSchematic weekId={week.id} />
         </div>
 
-        <h3 className="font-display text-lg font-semibold text-[#13243C] transition-colors group-hover:text-[#B8354B] sm:text-xl">
+        <h3 className="font-display text-lg font-bold tracking-tight text-[#13243C] transition-colors group-hover:text-[#B8354B] sm:text-xl">
           {week.roadmapTitle}
         </h3>
 

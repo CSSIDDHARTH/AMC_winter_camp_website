@@ -46,8 +46,8 @@ export function LockedWeekPage({ week, requestedSection }: LockedWeekPageProps) 
           <StatusBadge released={false} />
         </div>
 
-        <h1 className="font-display text-2xl font-bold tracking-tight text-[#13243C] sm:text-3xl text-balance">
-          Not Released Yet
+        <h1 className="font-display text-3xl font-extrabold tracking-[-0.025em] text-[#13243C] sm:text-4xl text-balance">
+          Not Released <span className="text-[#B8354B]">Yet</span>
         </h1>
 
         <p className="mt-4 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
