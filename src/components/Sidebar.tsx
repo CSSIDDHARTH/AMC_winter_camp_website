@@ -68,8 +68,8 @@ export function Sidebar() {
     <div className="flex h-full flex-col bg-[#13243C] text-[#F8F5EE] border-r border-[#243B5C]">
       {/* Sidebar Header */}
       <div
-        className={`flex h-16 items-center border-b border-[#243B5C] px-3 ${
-          isRail ? 'justify-center' : 'justify-between px-4'
+        className={`flex h-16 items-center border-b border-[#243B5C] ${
+          isRail ? 'justify-center px-0.5 lg:px-3' : 'justify-between px-4'
         }`}
       >
         {!isRail && (
@@ -92,10 +92,12 @@ export function Sidebar() {
           aria-expanded={!isRail}
           aria-label={isRail ? 'Expand sidebar menu' : 'Collapse sidebar menu'}
           title={isRail ? 'Expand sidebar' : 'Collapse sidebar'}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-[#2B466B] bg-[#1B314F] text-[#F8F5EE] transition-colors hover:border-[#DE546A] hover:bg-[#233E63] hover:text-[#F48B9B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A]"
+          className={`inline-flex items-center justify-center rounded-md lg:rounded-lg border border-[#2B466B] bg-[#1B314F] text-[#F8F5EE] transition-colors hover:border-[#DE546A] hover:bg-[#233E63] hover:text-[#F48B9B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] ${
+            isRail ? 'h-6 w-6 lg:h-9 lg:w-9' : 'h-9 w-9'
+          }`}
         >
           {isRail ? (
-            <ChevronRight className="h-4 w-4" aria-hidden="true" />
+            <ChevronRight className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
           ) : (
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
           )}
@@ -105,7 +107,9 @@ export function Sidebar() {
       {/* Navigation Tree */}
       <nav
         aria-label="Camp sidebar navigation"
-        className="flex-1 overflow-y-auto px-2 py-4 space-y-1.5"
+        className={`flex-1 overflow-y-auto py-4 space-y-1.5 ${
+          isRail ? 'px-0.5 lg:px-2' : 'px-2'
+        }`}
       >
         <NavLink
           to="/"
@@ -124,7 +128,9 @@ export function Sidebar() {
           {({ isActive }) => (
             <>
               <Home
-                className={`h-4 w-4 shrink-0 ${isActive ? 'text-[#F48B9B]' : 'text-[#9FB2C9]'}`}
+                className={`${isRail ? 'h-3.5 w-3.5 lg:h-4 lg:w-4' : 'h-4 w-4'} shrink-0 ${
+                  isActive ? 'text-[#F48B9B]' : 'text-[#9FB2C9]'
+                }`}
                 aria-hidden="true"
               />
               {!isRail && <span className="truncate">Home</span>}
@@ -138,7 +144,7 @@ export function Sidebar() {
               Weekly Modules
             </p>
           ) : (
-            <div className="mx-2 border-t border-[#243B5C]" />
+            <div className="mx-1 lg:mx-2 border-t border-[#243B5C]" />
           )}
         </div>
 
@@ -170,7 +176,7 @@ export function Sidebar() {
               >
                 <span className={`flex items-center ${isRail ? '' : 'gap-2.5 min-w-0'}`}>
                   <Icon
-                    className={`h-4 w-4 shrink-0 ${
+                    className={`${isRail ? 'h-3.5 w-3.5 lg:h-4 lg:w-4' : 'h-4 w-4'} shrink-0 ${
                       isActiveWeek ? 'text-[#F48B9B]' : 'text-[#9FB2C9]'
                     }`}
                     aria-hidden="true"
@@ -229,7 +235,7 @@ export function Sidebar() {
               Standings
             </p>
           ) : (
-            <div className="mx-2 border-t border-[#243B5C]" />
+            <div className="mx-1 lg:mx-2 border-t border-[#243B5C]" />
           )}
         </div>
 
@@ -249,7 +255,9 @@ export function Sidebar() {
           {({ isActive }) => (
             <>
               <Trophy
-                className={`h-4 w-4 shrink-0 ${isActive ? 'text-[#F48B9B]' : 'text-[#9FB2C9]'}`}
+                className={`${isRail ? 'h-3.5 w-3.5 lg:h-4 lg:w-4' : 'h-4 w-4'} shrink-0 ${
+                  isActive ? 'text-[#F48B9B]' : 'text-[#9FB2C9]'
+                }`}
                 aria-hidden="true"
               />
               {!isRail && <span className="truncate">Leaderboard</span>}
@@ -282,7 +290,7 @@ export function Sidebar() {
 
       <aside
         aria-label="Permanent mobile sidebar rail"
-        className="lg:hidden shrink-0 sticky top-0 h-screen w-14 z-30"
+        className="lg:hidden shrink-0 sticky top-0 h-screen w-8 z-30"
       >
         {renderContent(true, () => setMobileExpanded(true))}
       </aside>
@@ -296,7 +304,7 @@ export function Sidebar() {
           />
           <aside
             aria-label="Expanded mobile sidebar navigation"
-            className="relative z-10 h-full w-72 max-w-[85vw] shadow-xl"
+            className="relative z-10 h-full w-60 max-w-[75vw] shadow-xl"
           >
             {renderContent(false, () => setMobileExpanded(false))}
           </aside>
