@@ -4,7 +4,6 @@ import { ArrowDownRight, Snowflake } from 'lucide-react';
 import { WinterSnowfall } from './WinterSnowfall';
 import { HeroFlightAnimation } from './HeroFlightAnimation';
 import { HeroCloudLayer } from './HeroCloudLayer';
-import { SnowCappedHeadline } from './SnowCappedHeadline';
 
 export function HeroSection() {
   const [backdropError, setBackdropError] = useState(false);
@@ -92,7 +91,7 @@ export function HeroSection() {
       {/* Multi-Depth Winter Snow Particles */}
       <WinterSnowfall />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
+      <div className="relative z-20 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-28">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -106,8 +105,10 @@ export function HeroSection() {
               <span>Indian Institute of Technology (BHU), Varanasi</span>
             </div>
 
-            <div className="space-y-3 pt-1">
-              <SnowCappedHeadline />
+            <div className="space-y-3">
+              <h1 className="font-display text-4xl font-bold tracking-tight text-[#13243C] sm:text-5xl lg:text-[3.55rem] lg:leading-[1.06] text-balance">
+                AMC WINTER CAMP 2026–27
+              </h1>
               <p className="font-mono text-base font-semibold tracking-wide text-[#B8354B] sm:text-lg">
                 1 Dec – 21 Dec
               </p>
