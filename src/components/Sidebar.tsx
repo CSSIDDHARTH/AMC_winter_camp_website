@@ -383,7 +383,7 @@ export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarPr
             aria-controls="mobile-camp-navigation"
             aria-label="Open weekly module navigation"
             className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
-              mobileOpen || /^\\/week\\/[123](?:\\/|$)/.test(location.pathname)
+              mobileOpen || location.pathname.startsWith('/week/')
                 ? 'bg-[#FDF1F3] text-[#B8354B]'
                 : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
             }`}
