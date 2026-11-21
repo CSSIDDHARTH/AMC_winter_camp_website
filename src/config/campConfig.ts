@@ -45,7 +45,7 @@ export const campSchedule: CampSchedule = {
   campTagline: 'Your First Flight Into Innovation.',
   campDateRange: 'December 5–25, 2026',
   campDurationLabel: '21 days',
-  preCampHeroNote: 'Pre-Camp Software Setup: till dec 4',
+  preCampHeroNote: 'Pre-Camp Setup · Complete by December 4',
   footerLabel: 'AMC Winter Camp 2026 (December 5–25, 2026)',
 };
 
@@ -58,7 +58,7 @@ export const campConfig: CampConfig = {
     startDate: '2026-12-03',
     endDate: '2026-12-04',
     dateLabel: 'December 3–4, 2026',
-    shortDateLabel: 'till dec 4 ,2026',
+    shortDateLabel: 'Complete by Dec 4',
     released: true,
   },
   weeks: {
