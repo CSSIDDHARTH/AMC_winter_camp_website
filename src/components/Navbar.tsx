@@ -16,7 +16,7 @@ export function Navbar() {
 
   return (
     <header className="sticky top-3 z-40 px-4 sm:px-6 lg:px-8 pointer-events-none">
-      <div className="pointer-events-auto mx-auto flex h-13 max-w-4xl items-center justify-between gap-6 rounded-full border border-[#E5DEC9] bg-[#FFFCF7]/92 px-4 sm:px-6 shadow-sm shadow-[#13243C]/5 backdrop-blur-md">
+      <div className="pointer-events-auto mx-auto flex h-13 max-w-5xl items-center justify-between gap-4 lg:gap-6 rounded-full border border-[#E5DEC9] bg-[#FFFCF7]/92 px-4 sm:px-6 shadow-sm shadow-[#13243C]/5 backdrop-blur-md">
         {/* Zone 1: Single-line Brand Wordmark */}
         <Link
           to="/"
@@ -26,7 +26,7 @@ export function Navbar() {
         </Link>
 
         {/* Zone 2: Concise single-line nav links */}
-        <nav aria-label="Top navigation" className="hidden md:flex items-center gap-6">
+        <nav aria-label="Top navigation" className="hidden md:flex items-center gap-4 lg:gap-6">
           <NavLink
             to="/"
             end
@@ -39,6 +39,18 @@ export function Navbar() {
             }
           >
             Home
+          </NavLink>
+          <NavLink
+            to="/setup"
+            className={({ isActive }) =>
+              `text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
+                isActive
+                  ? 'border-[#DE546A] text-[#13243C]'
+                  : 'border-transparent text-[#4B5E77] hover:text-[#13243C]'
+              } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] rounded-sm`
+            }
+          >
+            Pre-Camp Setup
           </NavLink>
           <NavLink
             to="/week/1"

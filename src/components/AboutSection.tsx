@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { Compass, SlidersHorizontal, Trophy, Wrench } from 'lucide-react';
+import { campSchedule } from '../config/campConfig';
 
 const PILLARS = [
   {
@@ -48,7 +49,7 @@ export function AboutSection() {
         >
           <div className="lg:col-span-5 space-y-3">
             <div className="flex items-center gap-2 font-mono text-xs font-semibold tracking-wide text-[#B8354B]">
-              <span>1 Dec – 21 Dec</span>
+              <span>{campSchedule.campDateRange}</span>
               <span aria-hidden="true" className="text-[#C8BFA8]">·</span>
               <span className="text-[#5A6C84]">Camp Overview</span>
             </div>

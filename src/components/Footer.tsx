@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Instagram, MessageCircle } from 'lucide-react';
+import { campSchedule } from '../config/campConfig';
 
 const OFFICIAL_LINKS = {
   instagram: 'https://www.instagram.com/amc.iitbhu?igsh=dnYwM2xiYW9yYmJ4&utm_source=chatgpt.com',
@@ -39,6 +40,11 @@ export function Footer() {
                 <li>
                   <Link to="/" className="transition-colors hover:text-[#F48B9B]">
                     Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/setup" className="transition-colors hover:text-[#F48B9B]">
+                    Pre-Camp Setup
                   </Link>
                 </li>
                 <li>
@@ -98,7 +104,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-[#243B5C] pt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-[#8FA4BE]">
-          <p>AMC Winter Camp 2026–27 (1 Dec – 21 Dec) · Aeromodelling Club, IIT (BHU)</p>
+          <p>{campSchedule.footerLabel} · Aeromodelling Club, IIT (BHU)</p>
           <p>Structured Technical Learning Platform</p>
         </div>
       </div>

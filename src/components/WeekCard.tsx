@@ -37,7 +37,11 @@ export function WeekCard({ week, waypointLabel }: WeekCardProps) {
           {week.roadmapTitle}
         </h3>
 
-        <p className="mt-2.5 text-sm leading-relaxed text-[#4B5E77]">
+        <p className="mt-1 font-mono text-xs font-medium text-[#B8354B]">
+          {week.dateRange}
+        </p>
+
+        <p className="mt-2 text-sm leading-relaxed text-[#4B5E77]">
           {week.description}
         </p>
       </div>

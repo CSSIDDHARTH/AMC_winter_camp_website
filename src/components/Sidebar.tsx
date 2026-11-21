@@ -10,8 +10,9 @@ import {
   Lock,
   Network,
   Trophy,
+  Wrench,
 } from 'lucide-react';
-import { campConfig, WEEK_IDS, WeekId } from '../config/campConfig';
+import { campConfig, campSchedule, WEEK_IDS, WeekId } from '../config/campConfig';
 
 const WEEK_SECTIONS = [
   { key: 'instructions', label: 'Instructions' },
@@ -134,6 +135,37 @@ export function Sidebar() {
                 aria-hidden="true"
               />
               {!isRail && <span className="truncate">Home</span>}
+            </>
+          )}
+        </NavLink>
+
+        <NavLink
+          to="/setup"
+          title={isRail ? 'Pre-Camp Setup' : undefined}
+          className={({ isActive }) =>
+            `flex min-h-[42px] items-center rounded-lg px-3 text-sm font-medium transition-colors ${
+              isRail ? 'justify-center px-0' : 'justify-between gap-2'
+            } ${
+              isActive
+                ? 'bg-[#DE546A]/18 text-[#FFFCF7] border border-[#DE546A]/45'
+                : 'text-[#D9D4C7] hover:bg-[#1B314F] hover:text-[#FFFCF7] border border-transparent'
+            } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A]`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <span className={`flex items-center ${isRail ? '' : 'gap-3 min-w-0'}`}>
+                <Wrench
+                  className={`${isRail ? 'h-3.5 w-3.5 lg:h-4 lg:w-4' : 'h-4 w-4'} shrink-0 ${
+                    isActive ? 'text-[#F48B9B]' : 'text-[#9FB2C9]'
+                  }`}
+                  aria-hidden="true"
+                />
+                {!isRail && <span className="truncate">Pre-Camp Setup</span>}
+              </span>
+              {!isRail && !campConfig.preCamp.released && (
+                <Lock className="h-3.5 w-3.5 shrink-0 text-[#8FA4BE]" aria-label="Not released" />
+              )}
             </>
           )}
         </NavLink>
@@ -271,7 +303,9 @@ export function Sidebar() {
         <div className="border-t border-[#243B5C] p-4">
           <p className="text-xs font-semibold text-[#FFFCF7]">Aeromodelling Club</p>
           <p className="mt-0.5 text-[11px] text-[#9FB2C9]">IIT (BHU), Varanasi</p>
-          <p className="mt-1 font-mono text-[11px] font-medium text-[#F48B9B]">1 Dec – 21 Dec</p>
+          <p className="mt-1 font-mono text-[11px] font-medium text-[#F48B9B]">
+            {campSchedule.campDateRange}
+          </p>
         </div>
       )}
     </div>

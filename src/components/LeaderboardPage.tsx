@@ -27,7 +27,7 @@ export function LeaderboardPage({ entries = [] }: LeaderboardPageProps) {
           </h1>
 
           <p className="mt-4 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
-            The Winter Camp leaderboard will be displayed after the completion of Week 1.
+            The Winter Camp leaderboard will be displayed after Week 1.
             Stay tuned to see how participants perform across the challenges.
           </p>
 

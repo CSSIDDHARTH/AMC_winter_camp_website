@@ -4,6 +4,7 @@ import { ArrowDownRight, Snowflake } from 'lucide-react';
 import { WinterSnowfall } from './WinterSnowfall';
 import { HeroFlightAnimation } from './HeroFlightAnimation';
 import { HeroCloudLayer } from './HeroCloudLayer';
+import { campSchedule } from '../config/campConfig';
 
 export function HeroSection() {
   const [backdropError, setBackdropError] = useState(false);
@@ -111,15 +112,23 @@ export function HeroSection() {
                 <span className="bg-gradient-to-r from-[#13243C] via-[#1E3A5F] to-[#B8354B] bg-clip-text text-transparent">
                   WINTER CAMP
                 </span>{' '}
-                <span className="text-[#B8354B]">2026–27</span>
+                <span className="text-[#B8354B]">2026</span>
               </h1>
-              <div className="flex items-center gap-3 pt-0.5">
-                <span
-                  aria-hidden="true"
-                  className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#DE546A] to-[#1E3A5F]"
-                />
-                <p className="font-mono text-base font-semibold tracking-wide text-[#B8354B] sm:text-lg">
-                  1 Dec – 21 Dec
+              <p className="font-display text-lg font-bold tracking-tight text-[#1E3A5F] sm:text-xl">
+                {campSchedule.campTagline}
+              </p>
+              <div className="space-y-1.5 pt-0.5">
+                <div className="flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#DE546A] to-[#1E3A5F]"
+                  />
+                  <p className="font-mono text-base font-semibold tracking-wide text-[#B8354B] sm:text-lg">
+                    {campSchedule.campDateRange}
+                  </p>
+                </div>
+                <p className="font-mono text-xs font-medium text-[#4B5E77]">
+                  {campSchedule.preCampHeroNote}
                 </p>
               </div>
             </div>
@@ -151,9 +160,9 @@ export function HeroSection() {
               <span>Winter Edition</span>
             </span>
             <span aria-hidden="true" className="text-[#9DB0C7]">/</span>
-            <span>1 Dec – 21 Dec</span>
+            <span>{campSchedule.campDateRange}</span>
             <span aria-hidden="true" className="text-[#9DB0C7]">/</span>
-            <span>03 Structured Weeks</span>
+            <span>21 Days · 03 Structured Weeks</span>
             <span aria-hidden="true" className="text-[#9DB0C7]">/</span>
             <span>CAD · ROS 2 · UAV Systems</span>
           </div>

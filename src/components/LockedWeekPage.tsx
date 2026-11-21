@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, Lock } from 'lucide-react';
-import { WeekConfig, WeekSection } from '../config/campConfig';
+import { PreCampConfig, WeekConfig, WeekSection } from '../config/campConfig';
 import { StatusBadge } from './StatusBadge';
 
 interface LockedWeekPageProps {
-  week: WeekConfig;
+  week?: WeekConfig;
+  preCamp?: PreCampConfig;
   requestedSection?: WeekSection;
 }
 
@@ -15,7 +16,19 @@ const SECTION_LABELS: Record<WeekSection, string> = {
   submission: 'Submission',
 };
 
-export function LockedWeekPage({ week, requestedSection }: LockedWeekPageProps) {
+export function LockedWeekPage({ week, preCamp, requestedSection }: LockedWeekPageProps) {
+  const headerCode = week
+    ? `WEEK 0${week.id} — ${week.title.toUpperCase()}`
+    : preCamp
+      ? `${preCamp.title.toUpperCase()} — ${preCamp.dateLabel.toUpperCase()}`
+      : 'MODULE';
+
+  const dateInfo = week ? week.dateRange : preCamp ? preCamp.shortDateLabel : undefined;
+
+  const descriptionText = preCamp
+    ? 'The setup overview and installation guides for the Pre-Camp Setup phase have not been released yet. Stay tuned for the official announcement.'
+    : 'The instructions, tasks, and submission details for this week have not been released yet. Stay tuned for the official announcement.';
+
   return (
     <section className="flex min-h-[calc(100vh-12rem)] items-center justify-center bg-[#F8F5EE] px-4 py-16 sm:px-6 lg:px-8 blueprint-grid">
       <motion.div
@@ -24,10 +37,16 @@ export function LockedWeekPage({ week, requestedSection }: LockedWeekPageProps) 
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-xl rounded-2xl border border-[#E5DEC9] bg-[#FFFCF7] p-8 text-center shadow-xs sm:p-12"
       >
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-2.5">
           <span className="font-mono text-xs font-semibold tracking-wider text-[#1E3A5F]">
-            WEEK 0{week.id} — {week.title.toUpperCase()}
+            {headerCode}
           </span>
+          {dateInfo && (
+            <>
+              <span aria-hidden="true" className="text-[#D4CCB8]">·</span>
+              <span className="font-mono text-xs text-[#5A6C84]">{dateInfo}</span>
+            </>
+          )}
           {requestedSection && (
             <>
               <span aria-hidden="true" className="text-[#D4CCB8]">·</span>
@@ -51,8 +70,7 @@ export function LockedWeekPage({ week, requestedSection }: LockedWeekPageProps) 
         </h1>
 
         <p className="mt-4 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
-          The instructions, tasks, and submission details for this week have not been released yet.
-          Stay tuned for the official announcement.
+          {descriptionText}
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

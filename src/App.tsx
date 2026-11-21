@@ -6,6 +6,7 @@ import { Sidebar } from './components/Sidebar';
 import { Footer } from './components/Footer';
 import { LeaderboardPage } from './components/LeaderboardPage';
 import { HomePage } from './pages/HomePage';
+import { SetupPage } from './pages/SetupPage';
 import { WeekPage } from './pages/WeekPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
@@ -44,6 +45,7 @@ function AppShell() {
         <main className={isHome ? '-mt-13 flex-1' : 'flex-1'}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/setup" element={<SetupPage />} />
             <Route path="/week/:weekId" element={<WeekPage section="instructions" />} />
             <Route path="/week/:weekId/instructions" element={<WeekPage section="instructions" />} />
             <Route path="/week/:weekId/tasks" element={<WeekPage section="tasks" />} />

@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { Flag, Lock, MapPin, Navigation } from 'lucide-react';
-import { campConfig, WEEK_IDS, WeekConfig } from '../config/campConfig';
+import { Link } from 'react-router-dom';
+import { ArrowRight, Flag, Lock, MapPin, Navigation, Wrench } from 'lucide-react';
+import { campConfig, campSchedule, WEEK_IDS, WeekConfig } from '../config/campConfig';
 import { WeekCard } from './WeekCard';
 import { SchematicMapBackdrop } from './SchematicMapBackdrop';
+import { StatusBadge } from './StatusBadge';
 
 interface WaypointNodeProps {
   week: WeekConfig;
@@ -258,9 +260,9 @@ export function Roadmap() {
     (p) => 40 + p * Math.max(120, mapHeight - 80)
   );
 
-  const scrollToWaypoint = (weekId: number) => {
+  const scrollToWaypoint = (targetId: string) => {
     document
-      .getElementById(`waypoint-week-${weekId}`)
+      .getElementById(targetId)
       ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
@@ -276,7 +278,7 @@ export function Roadmap() {
           <div className="max-w-2xl space-y-3">
             <div className="inline-flex items-center gap-2 font-mono text-xs font-semibold tracking-wide text-[#B8354B]">
               <Navigation className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>Flight Plan · 1 Dec – 21 Dec · 03 Waypoints</span>
+              <span>Flight Plan · {campSchedule.campDateRange} · {campSchedule.campDurationLabel}</span>
             </div>
             <h2 className="font-display text-3xl font-extrabold tracking-[-0.025em] leading-[1.08] text-[#13243C] sm:text-4xl text-balance">
               Three-Week Curriculum <span className="text-[#B8354B]">Roadmap</span>
@@ -286,36 +288,93 @@ export function Roadmap() {
               className="h-[3px] w-12 rounded-full bg-gradient-to-r from-[#DE546A] to-[#1E3A5F]"
             />
             <p className="pt-1 text-sm leading-relaxed text-[#4B5E77] sm:text-base">
-              Scroll along the camp route to approach each weekly waypoint—progressing from
-              parametric CAD design and ROS 2 autonomy to full UAV component integration.
+              Begin with Pre-Camp software installation, then scroll along the flight route through
+              CAD, ROS 2 autonomy, and UAV component selection.
             </p>
           </div>
 
           {/* Interactive Waypoint Jump Strip */}
           <div
             aria-label="Jump to curriculum waypoint"
-            className="flex flex-wrap items-center gap-2 rounded-xl border border-[#E5DEC9] bg-[#FFFCF7]/95 p-1.5 shadow-xs"
+            className="flex flex-wrap items-center gap-1.5 rounded-xl border border-[#E5DEC9] bg-[#FFFCF7]/95 p-1.5 shadow-xs"
           >
+            <button
+              type="button"
+              onClick={() => scrollToWaypoint('waypoint-precamp')}
+              className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#33465F] transition-colors hover:bg-[#FDF1F3] hover:text-[#B8354B] whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F]"
+            >
+              <span className="font-mono text-[#1E3A5F] font-semibold">00</span>
+              <span>Pre-Camp</span>
+            </button>
+            <span aria-hidden="true" className="px-0.5 text-[#C8BFA8]">
+              →
+            </span>
             {WEEK_IDS.map((id, idx) => {
               const week = campConfig.weeks[id];
               return (
                 <div key={id} className="flex items-center">
                   <button
                     type="button"
-                    onClick={() => scrollToWaypoint(id)}
-                    className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-[#33465F] transition-colors hover:bg-[#FDF1F3] hover:text-[#B8354B] whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F]"
+                    onClick={() => scrollToWaypoint(`waypoint-week-${id}`)}
+                    className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-[#33465F] transition-colors hover:bg-[#FDF1F3] hover:text-[#B8354B] whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F]"
                   >
                     <span className="font-mono text-[#B8354B] font-semibold">0{id}</span>
                     <span>{week.shortTitle}</span>
                   </button>
                   {idx < WEEK_IDS.length - 1 && (
-                    <span aria-hidden="true" className="px-1 text-[#C8BFA8]">
+                    <span aria-hidden="true" className="px-0.5 text-[#C8BFA8]">
                       →
                     </span>
                   )}
                 </div>
               );
             })}
+          </div>
+        </div>
+
+        {/* Distinct Pre-Camp Preparation Milestone (Separate from the 3-Week Camp) */}
+        <div id="waypoint-precamp" className="relative z-10 scroll-mt-24 mb-2">
+          <div className="mx-auto max-w-4xl rounded-2xl border-2 border-dashed border-[#1E3A5F]/35 bg-[#FFFCF7]/95 p-5 shadow-xs sm:p-6">
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E5DEC9] bg-[#F8F5EE] text-[#1E3A5F]">
+                  <Wrench className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2.5">
+                    <span className="font-mono text-xs font-semibold tracking-wider text-[#1E3A5F]">
+                      PRE-FLIGHT PREPARATION
+                    </span>
+                    <span aria-hidden="true" className="text-[#C8BFA8]">·</span>
+                    <span className="font-mono text-xs font-medium text-[#B8354B]">
+                      {campConfig.preCamp.shortDateLabel} ({campConfig.preCamp.dateLabel})
+                    </span>
+                    <StatusBadge released={campConfig.preCamp.released} />
+                  </div>
+                  <h3 className="font-display text-lg font-bold tracking-tight text-[#13243C] sm:text-xl">
+                    Pre-Camp Setup — Software Installation &amp; Environment Setup
+                  </h3>
+                  <p className="text-sm leading-relaxed text-[#4B5E77]">
+                    Complete required software installations and platform setup before Week 1 begins on December 5.
+                  </p>
+                </div>
+              </div>
+
+              <div className="shrink-0">
+                <Link
+                  to="/setup"
+                  className="inline-flex items-center gap-2 rounded-md bg-[#1E3A5F] px-4 py-2.5 text-xs font-semibold text-[#FFFCF7] transition-colors hover:bg-[#B8354B] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2"
+                >
+                  <span>Prepare for the Camp</span>
+                  <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Staging Connector into Week 1 */}
+          <div aria-hidden="true" className="flex justify-start pl-6 md:justify-center md:pl-0">
+            <div className="h-8 border-l-2 border-dashed border-[#1E3A5F]/40" />
           </div>
         </div>
 
@@ -405,7 +464,7 @@ export function Roadmap() {
               <Flag className="h-3.5 w-3.5 text-[#DE546A]" aria-hidden="true" />
               <span className="font-mono text-[#1E3A5F] font-semibold">DESTINATION</span>
               <span aria-hidden="true" className="text-[#D4CCB8]">·</span>
-              <span>1 Dec – 21 Dec</span>
+              <span>{campSchedule.campDateRange} ({campSchedule.campDurationLabel})</span>
             </div>
           </div>
         </div>

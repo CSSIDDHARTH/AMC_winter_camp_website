@@ -35,7 +35,8 @@ export function WeekLayout({ week, section, content }: WeekLayoutProps) {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-2">
               <p className="font-mono text-xs font-semibold tracking-wider text-[#B8354B]">
-                WEEK 0{week.id}
+                WEEK 0{week.id} <span className="text-[#C8BFA8]">·</span>{' '}
+                <span className="text-[#5A6C84]">{week.dateRange}</span>
               </p>
               <h1 className="font-display text-3xl font-extrabold tracking-[-0.025em] text-[#13243C] sm:text-4xl">
                 {week.title}
