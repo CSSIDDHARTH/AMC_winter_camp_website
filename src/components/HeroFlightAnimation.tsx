@@ -255,121 +255,174 @@ function FixedWing3DSvg({ spin = true }: { spin?: boolean }) {
   );
 }
 
+
+/**
+ * A quiet engineering flight display. The instrumentation is decorative and
+ * intentionally labelled as a simulation rather than live flight telemetry.
+ */
+function FlightInstrumentation() {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block" aria-hidden="true">
+      <div className="absolute right-[3%] top-[5%] h-[82%] w-[49%] opacity-80">
+        <svg viewBox="0 0 480 480" className="h-full w-full" fill="none" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <radialGradient id="flight-hud-glow">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.28" />
+              <stop offset="55%" stopColor="#B9D9F0" stopOpacity="0.12" />
+              <stop offset="100%" stopColor="#B9D9F0" stopOpacity="0" />
+            </radialGradient>
+            <linearGradient id="flight-hud-sweep" x1="0%" x2="100%" y1="0%" y2="100%">
+              <stop offset="0%" stopColor="#DE546A" stopOpacity="0" />
+              <stop offset="100%" stopColor="#1E3A5F" stopOpacity="0.16" />
+            </linearGradient>
+          </defs>
+          <circle cx="240" cy="240" r="222" fill="url(#flight-hud-glow)" />
+          <circle cx="240" cy="240" r="179" stroke="#1E3A5F" strokeOpacity="0.16" strokeWidth="1.1" strokeDasharray="3 11" />
+          <circle cx="240" cy="240" r="135" stroke="#1E3A5F" strokeOpacity="0.14" strokeWidth="1" />
+          <circle cx="240" cy="240" r="94" stroke="#1E3A5F" strokeOpacity="0.10" strokeWidth="1" strokeDasharray="5 7" />
+          <path d="M240 24 V95 M240 386 V456 M24 240 H95 M386 240 H456" stroke="#1E3A5F" strokeOpacity="0.2" strokeWidth="1.1" />
+          <path d="M96 108 L115 127 M365 353 L384 372 M96 372 L115 353 M365 127 L384 108" stroke="#DE546A" strokeOpacity="0.45" strokeWidth="1.5" />
+          <motion.g
+            style={{ transformOrigin: '240px 240px' }}
+            animate={reduceMotion ? undefined : { rotate: 360 }}
+            transition={{ duration: 36, ease: 'linear', repeat: Infinity }}
+          >
+            <path d="M240 240 L240 66 A174 174 0 0 1 361 115 Z" fill="url(#flight-hud-sweep)" />
+            <path d="M240 66 A174 174 0 0 1 361 115" stroke="#DE546A" strokeOpacity="0.44" strokeWidth="1.6" />
+          </motion.g>
+          <circle cx="240" cy="240" r="4" fill="#DE546A" fillOpacity="0.38" />
+          <path d="M235 240 H245 M240 235 V245" stroke="#FFFFFF" strokeOpacity="0.8" strokeWidth="1.3" />
+        </svg>
+      </div>
+
+      <div className="absolute right-[7%] top-[10%] flex items-center gap-2 rounded-lg border border-[#1E3A5F]/15 bg-[#FFFCF7]/75 px-3 py-2 shadow-[0_8px_24px_-16px_rgba(19,36,60,0.25)] backdrop-blur-sm">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#DE546A]" />
+        <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-[#1E3A5F]">UAV FLIGHT SYSTEMS</span>
+      </div>
+      <div className="absolute right-[4%] bottom-[17%] flex items-center gap-2 rounded-lg border border-[#1E3A5F]/12 bg-[#FFFCF7]/70 px-3 py-2 backdrop-blur-sm">
+        <span className="h-px w-6 bg-[#DE546A]/75" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#1E3A5F]">Flight-path visualization</span>
+      </div>
+    </div>
+  );
+}
+
 export function HeroFlightAnimation({
   parallaxRef,
 }: {
-  parallaxRef?: React.MutableRefObject<{ x: number; y: number }>;
+  parallaxRef?: React.RefObject<{ x: number; y: number }>;
 }) {
-  const prefersReducedMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
-  const heroDroneRef = useRef<HTMLDivElement>(null);
+  const leadRef = useRef<HTMLDivElement>(null);
   const gliderRef = useRef<HTMLDivElement>(null);
-  const midDroneRef = useRef<HTMLDivElement>(null);
-  const distantDroneRef = useRef<HTMLDivElement>(null);
+  const scoutRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (reduceMotion) return;
 
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    let width = stage.clientWidth || 1200;
+    let height = stage.clientHeight || 620;
+    let visible = true;
     let rafId = 0;
-    const startTime = performance.now();
-    let smoothPx = 0;
-    let smoothPy = 0;
+    let smoothX = 0;
+    let smoothY = 0;
+    const startedAt = performance.now();
 
-    const tick = (now: number) => {
-      const t = (now - startTime) / 1000;
-      const stage = stageRef.current;
-
-      if (stage) {
-        const w = stage.clientWidth || 1200;
-        const h = stage.clientHeight || 540;
-
-        // Smoothly damp mouse parallax offset
-        const targetPx = parallaxRef?.current.x ?? 0;
-        const targetPy = parallaxRef?.current.y ?? 0;
-        smoothPx += (targetPx - smoothPx) * 0.06;
-        smoothPy += (targetPy - smoothPy) * 0.06;
-
-        // 1. Lead 3D Hero Quadcopter: graceful figure-8 patrol in the right open sky
-        if (heroDroneRef.current) {
-          const omega = 0.26;
-          const phase = t * omega + 0.6;
-          const baseX = w < 640 ? w * 0.68 : w * 0.77;
-          const baseY = h * 0.34;
-          const ampX = w < 640 ? w * 0.14 : w * 0.11;
-          const ampY = h * 0.095;
-
-          const x = baseX + Math.sin(phase) * ampX + smoothPx * 18;
-          const y = baseY + Math.sin(phase * 2) * ampY + Math.cos(t * 1.1) * 3 + smoothPy * 12;
-          const vx = Math.cos(phase) * ampX * omega;
-          const bank = Math.max(-13, Math.min(13, vx * 0.16));
-          const depthScale = (w < 640 ? 0.78 : 1.0) + Math.cos(phase) * 0.09;
-
-          heroDroneRef.current.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translate(-50%, -50%) rotate(${bank.toFixed(2)}deg) scale(${depthScale.toFixed(3)})`;
-        }
-
-        // 2. Swept-Wing Autonomous Glider UAV: continuous parabolic climb left-to-right
-        if (gliderRef.current) {
-          const cycle = 22;
-          const progress = ((t + 5.5) % cycle) / cycle; // 0..1
-          const x = -140 + progress * (w + 280) + smoothPx * 10;
-          // Gentle ascending glide arc with subtle aerodynamic lift curve
-          const y = h * 0.38 - Math.sin(progress * Math.PI * 0.88) * (h * 0.22) - progress * (h * 0.12) + smoothPy * 8;
-
-          // Compute exact tangent angle for realistic pitch/climb attitude
-          const dx = w + 280;
-          const dy = -Math.cos(progress * Math.PI * 0.88) * Math.PI * 0.88 * (h * 0.22) - h * 0.12;
-          const angleDeg = (Math.atan2(dy, dx) * 180) / Math.PI;
-          const edgeFade = Math.min(progress / 0.12, (1 - progress) / 0.12, 1);
-
-          gliderRef.current.style.opacity = (Math.max(0, edgeFade) * 0.92).toFixed(3);
-          gliderRef.current.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translate(-50%, -50%) rotate(${angleDeg.toFixed(2)}deg) scale(${(w < 640 ? 0.72 : 0.94).toFixed(2)})`;
-        }
-
-        // 3. Mid-Altitude Cruiser Drone: sweeping smoothly across the upper sky
-        if (midDroneRef.current) {
-          const cycle = 26;
-          const progress = ((t + 14) % cycle) / cycle;
-          const x = -110 + progress * (w + 220) + smoothPx * 7;
-          const y = h * 0.16 + Math.sin(progress * Math.PI * 2) * (h * 0.05) + smoothPy * 5;
-          const dy = Math.cos(progress * Math.PI * 2) * Math.PI * 2 * (h * 0.05);
-          const pitch = 7 + (dy / (w + 220)) * 35;
-          const edgeFade = Math.min(progress / 0.1, (1 - progress) / 0.1, 1);
-
-          midDroneRef.current.style.opacity = (Math.max(0, edgeFade) * 0.72).toFixed(3);
-          midDroneRef.current.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translate(-50%, -50%) rotate(${pitch.toFixed(2)}deg) scale(0.68)`;
-        }
-
-        // 4. Distant Horizon Scout Drone: gliding right-to-left behind lower cloud layer
-        if (distantDroneRef.current) {
-          const cycle = 30;
-          const progress = ((t + 9) % cycle) / cycle;
-          const x = w + 100 - progress * (w + 200) + smoothPx * 4;
-          const y = h * 0.66 + Math.sin(progress * Math.PI * 2.5) * (h * 0.045) + smoothPy * 4;
-          const edgeFade = Math.min(progress / 0.12, (1 - progress) / 0.12, 1);
-
-          distantDroneRef.current.style.opacity = (Math.max(0, edgeFade) * 0.56).toFixed(3);
-          distantDroneRef.current.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) translate(-50%, -50%) scaleX(-1) rotate(8deg) scale(0.46)`;
-        }
-      }
-
-      rafId = requestAnimationFrame(tick);
+    const schedule = () => {
+      if (!rafId && visible && !document.hidden) rafId = requestAnimationFrame(tick);
     };
 
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [prefersReducedMotion, parallaxRef]);
+    function tick(now: number) {
+      rafId = 0;
+      const t = (now - startedAt) / 1000;
+      const targetX = parallaxRef?.current?.x ?? 0;
+      const targetY = parallaxRef?.current?.y ?? 0;
+      smoothX += (targetX - smoothX) * 0.045;
+      smoothY += (targetY - smoothY) * 0.045;
 
-  if (prefersReducedMotion) {
+      // Main craft: restrained, layered orbital movement with a soft bank.
+      if (leadRef.current) {
+        const phase = t * 0.22 + 0.35;
+        const x = width * 0.79 + Math.sin(phase) * Math.min(width * 0.052, 68) + smoothX * 15;
+        const y = height * 0.375 + Math.sin(phase * 2) * height * 0.042 + Math.cos(t * 0.8) * 3 + smoothY * 11;
+        const bank = Math.cos(phase) * 7;
+        const yaw = Math.sin(phase) * 9;
+        const pitch = Math.sin(phase * 2) * 3;
+        const scale = 1.04 + Math.sin(phase + 0.8) * 0.065;
+
+        leadRef.current.style.transform =
+          'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) translate(-50%,-50%) ' +
+          'perspective(900px) rotateY(' + yaw.toFixed(1) + 'deg) rotateX(' + pitch.toFixed(1) +
+          'deg) rotate(' + bank.toFixed(1) + 'deg) scale(' + scale.toFixed(3) + ')';
+      }
+
+      // Fixed wing: one slow, smooth flyby well behind the hero craft.
+      if (gliderRef.current) {
+        const cycle = 29;
+        const progress = ((t + 5) % cycle) / cycle;
+        const x = -180 + progress * (width + 360) + smoothX * 8;
+        const y = height * 0.21 - Math.sin(progress * Math.PI) * height * 0.09 + smoothY * 6;
+        const fade = Math.max(0, Math.min(1, progress * 8, (1 - progress) * 8));
+
+        gliderRef.current.style.opacity = (fade * 0.75).toFixed(3);
+        gliderRef.current.style.transform =
+          'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) translate(-50%,-50%) ' +
+          'rotate(' + (-7 + Math.sin(progress * Math.PI * 2) * 2).toFixed(1) + 'deg) scale(0.86)';
+      }
+
+      // A tiny distant observer keeps the image atmospheric without adding clutter.
+      if (scoutRef.current) {
+        const cycle = 40;
+        const progress = ((t + 15) % cycle) / cycle;
+        const x = width + 100 - progress * (width + 200) + smoothX * 5;
+        const y = height * 0.72 + Math.sin(progress * Math.PI * 2) * height * 0.028 + smoothY * 4;
+        const fade = Math.max(0, Math.min(1, progress * 8, (1 - progress) * 8));
+
+        scoutRef.current.style.opacity = (fade * 0.40).toFixed(3);
+        scoutRef.current.style.transform =
+          'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) translate(-50%,-50%) scaleX(-1) rotate(5deg) scale(0.55)';
+      }
+
+      schedule();
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      width = stage.clientWidth || width;
+      height = stage.clientHeight || height;
+    });
+    resizeObserver.observe(stage);
+
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      visible = Boolean(entry?.isIntersecting);
+      schedule();
+    }, { threshold: 0.03 });
+    visibilityObserver.observe(stage);
+    document.addEventListener('visibilitychange', schedule);
+    schedule();
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      document.removeEventListener('visibilitychange', schedule);
+    };
+  }, [reduceMotion, parallaxRef]);
+
+  if (reduceMotion) {
     return (
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="absolute right-[12%] top-[24%] h-20 w-32 opacity-90">
+        <FlightInstrumentation />
+        <div className="absolute right-[6%] top-[26%] hidden h-32 w-56 opacity-90 md:block">
           <Quadcopter3DSvg spin={false} />
         </div>
-        <div className="absolute right-[26%] top-[12%] h-14 w-36 -rotate-8 opacity-85">
+        <div className="absolute right-[23%] top-[10%] hidden h-16 w-40 -rotate-8 opacity-65 md:block">
           <FixedWing3DSvg spin={false} />
-        </div>
-        <div className="hidden sm:block absolute right-[7%] bottom-[22%] h-12 w-20 opacity-55">
-          <Quadcopter3DSvg spin={false} distant />
         </div>
       </div>
     );
@@ -377,39 +430,31 @@ export function HeroFlightAnimation({
 
   return (
     <div ref={stageRef} className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      {/* Far-horizon scout quadcopter */}
-      <div
-        ref={distantDroneRef}
-        className="absolute top-0 left-0 h-20 w-32 will-change-transform"
-        style={{ opacity: 0 }}
-      >
-        <Quadcopter3DSvg distant />
+      <FlightInstrumentation />
+
+      {/* Mobile: still show an aircraft without animating over the headline. */}
+      <div className="absolute right-[-5%] top-[9%] h-24 w-40 opacity-20 md:hidden">
+        <Quadcopter3DSvg spin={false} distant />
       </div>
 
-      {/* Mid-altitude cruising quadcopter */}
-      <div
-        ref={midDroneRef}
-        className="absolute top-0 left-0 h-20 w-32 will-change-transform"
-        style={{ opacity: 0 }}
-      >
-        <Quadcopter3DSvg />
+      <div ref={scoutRef} className="absolute left-0 top-0 hidden h-16 w-28 will-change-transform md:block" style={{ opacity: 0 }}>
+        <Quadcopter3DSvg spin={false} distant />
       </div>
 
-      {/* Swept-wing autonomous survey UAV with contrails */}
-      <div
-        ref={gliderRef}
-        className="absolute top-0 left-0 h-16 w-40 will-change-transform"
-        style={{ opacity: 0 }}
-      >
-        <FixedWing3DSvg />
+      <div ref={gliderRef} className="absolute left-0 top-0 hidden h-16 w-40 will-change-transform md:block" style={{ opacity: 0 }}>
+        <FixedWing3DSvg spin />
       </div>
 
-      {/* Hero foreground 3D quadcopter patrolling open sky */}
-      <div
-        ref={heroDroneRef}
-        className="hidden sm:block absolute top-0 left-0 h-24 w-40 drop-shadow-[0_14px_18px_rgba(19,36,60,0.18)] will-change-transform"
-      >
-        <Quadcopter3DSvg />
+      <div ref={leadRef} className="absolute left-0 top-0 hidden h-36 w-60 will-change-transform md:block">
+        <div className="relative h-full w-full">
+          <div
+            className="absolute inset-[-14%] -z-10 rounded-full blur-xl"
+            style={{ background: 'radial-gradient(ellipse, rgba(255,255,255,0.65), rgba(192,217,238,0.14) 52%, transparent 72%)' }}
+          />
+          <div className="relative h-full w-full drop-shadow-[0_20px_22px_rgba(19,36,60,0.22)]">
+            <Quadcopter3DSvg />
+          </div>
+        </div>
       </div>
     </div>
   );
