@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import {
-  BookOpen,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -12,6 +11,7 @@ import {
   Network,
   Trophy,
   Wrench,
+  X,
 } from 'lucide-react';
 import { campConfig, campSchedule, WEEK_IDS, WeekId } from '../config/campConfig';
 
@@ -30,9 +30,10 @@ const WEEK_ICONS: Record<WeekId, typeof Layers> = {
 interface SidebarProps {
   mobileOpen: boolean;
   onCloseMobile: () => void;
+  onToggleMobile: () => void;
 }
 
-export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
+export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarProps) {
   const location = useLocation();
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
   const drawerRef = useRef<HTMLElement>(null);
@@ -66,7 +67,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener('keydown', handleKeyDown);
-      document.getElementById('camp-mobile-menu-button')?.focus();
+      document.getElementById('camp-mobile-modules-button')?.focus();
     };
   }, [mobileOpen, onCloseMobile]);
 
@@ -90,6 +91,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         {!isRail && (
           <Link
             to="/"
+            onClick={isMobile ? onCloseMobile : undefined}
             className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-[#FFFCF7] whitespace-nowrap overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] rounded"
           >
             <img
@@ -111,7 +113,9 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
             isRail ? 'h-6 w-6 lg:h-9 lg:w-9' : 'h-9 w-9'
           }`}
         >
-          {isRail ? (
+          {isMobile ? (
+            <X className="h-4 w-4" aria-hidden="true" />
+          ) : isRail ? (
             <ChevronRight className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
           ) : (
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -153,16 +157,6 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
             </>
           )}
         </NavLink>
-
-        <Link
-          to="/#how-it-works"
-          onClick={isMobile ? onCloseMobile : undefined}
-          className={`flex min-h-[42px] items-center rounded-lg border border-transparent px-3 text-sm font-medium text-[#D9D4C7] transition-colors hover:bg-[#1B314F] hover:text-[#FFFCF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] ${isRail ? 'justify-center px-0' : 'gap-3'}`}
-          title={isRail ? 'How It Works' : undefined}
-        >
-          <BookOpen className={`${isRail ? 'h-3.5 w-3.5 lg:h-4 lg:w-4' : 'h-4 w-4'} shrink-0 text-[#9FB2C9]`} aria-hidden="true" />
-          {!isRail && <span>How It Works</span>}
-        </Link>
 
         <NavLink
           to="/setup"
@@ -349,12 +343,76 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
         {renderContent(desktopCollapsed, () => setDesktopCollapsed((prev) => !prev))}
       </aside>
 
+      {/* Mobile bottom navigation. Desktop keeps its collapsible left sidebar. */}
+      <nav
+        aria-label="Mobile bottom navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E5DEC9] bg-[#FFFCF7]/98 shadow-[0_-8px_28px_-14px_rgba(19,36,60,0.22)] backdrop-blur-lg lg:hidden"
+        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+      >
+        <div className="mx-auto grid max-w-xl grid-cols-4 items-stretch px-2 pt-2">
+          <NavLink
+            to="/"
+            end
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+              }`
+            }
+          >
+            <Home className="h-5 w-5" aria-hidden="true" />
+            <span>Home</span>
+          </NavLink>
+          <NavLink
+            to="/setup"
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+              }`
+            }
+          >
+            <Wrench className="h-5 w-5" aria-hidden="true" />
+            <span>Pre-Camp</span>
+          </NavLink>
+          <button
+            id="camp-mobile-modules-button"
+            type="button"
+            onClick={onToggleMobile}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-camp-navigation"
+            aria-label="Open weekly module navigation"
+            className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+              mobileOpen || /^\\/week\\/[123](?:\\/|$)/.test(location.pathname)
+                ? 'bg-[#FDF1F3] text-[#B8354B]'
+                : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+            }`}
+          >
+            <Layers className="h-5 w-5" aria-hidden="true" />
+            <span>Weeks</span>
+          </button>
+          <NavLink
+            to="/leaderboard"
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+              }`
+            }
+          >
+            <Trophy className="h-5 w-5" aria-hidden="true" />
+            <span>Leaderboard</span>
+          </NavLink>
+        </div>
+      </nav>
+
+      {/* The existing full navigation, now revealed as a bottom sheet on mobile. */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end lg:hidden">
+        <div className="fixed inset-0 z-50 lg:hidden">
           <button
             type="button"
-            aria-label="Close navigation menu"
-            className="fixed inset-0 cursor-default bg-[#0A1424]/55 backdrop-blur-xs"
+            aria-label="Close weekly navigation"
+            className="absolute inset-0 h-full w-full cursor-default bg-[#0A1424]/55 backdrop-blur-xs"
             onClick={onCloseMobile}
           />
           <aside
@@ -364,7 +422,7 @@ export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Camp navigation menu"
-            className="relative z-10 h-full w-80 max-w-[85vw] shadow-2xl outline-none"
+            className="absolute inset-x-0 bottom-0 mx-auto h-[min(78dvh,720px)] max-w-xl overflow-hidden rounded-t-3xl shadow-2xl outline-none"
           >
             {renderContent(false, onCloseMobile, true)}
           </aside>
