@@ -349,7 +349,7 @@ export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarPr
       {/* Mobile bottom navigation. Desktop keeps its collapsible left sidebar. */}
       <nav
         aria-label="Mobile bottom navigation"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#2B466B] bg-[#13243C] text-[#FFFCF7] shadow-[0_-8px_28px_-14px_rgba(19,36,60,0.3)] lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E5DEC9] bg-[#FFFCF7]/98 text-[#13243C] shadow-[0_-8px_28px_-14px_rgba(19,36,60,0.22)] lg:hidden"
         style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
       >
         <div className="mx-auto grid max-w-xl grid-cols-4 items-stretch px-2 pt-2">
@@ -358,8 +358,8 @@ export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarPr
             end
             onClick={onCloseMobile}
             className={({ isActive }) =>
-              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB7C4] ${
-                isActive ? 'bg-[#2B466B] text-[#FFB7C4]' : 'text-[#D9E3EF] hover:bg-[#1F3857] hover:text-white'
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
               }`
             }
           >
@@ -370,8 +370,8 @@ export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarPr
             to="/setup"
             onClick={onCloseMobile}
             className={({ isActive }) =>
-              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB7C4] ${
-                isActive ? 'bg-[#2B466B] text-[#FFB7C4]' : 'text-[#D9E3EF] hover:bg-[#1F3857] hover:text-white'
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
               }`
             }
           >
@@ -385,10 +385,10 @@ export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarPr
             aria-expanded={mobileOpen}
             aria-controls="mobile-camp-navigation"
             aria-label="Open weekly module navigation"
-            className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB7C4] ${
+            className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
               mobileOpen || location.pathname.startsWith('/week/')
-                ? 'bg-[#2B466B] text-[#FFB7C4]'
-                : 'text-[#D9E3EF] hover:bg-[#1F3857] hover:text-white'
+                ? 'bg-[#FDF1F3] text-[#B8354B]'
+                : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
             }`}
           >
             <Layers className="h-5 w-5" aria-hidden="true" />
@@ -398,8 +398,8 @@ export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarPr
             to="/leaderboard"
             onClick={onCloseMobile}
             className={({ isActive }) =>
-              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFB7C4] ${
-                isActive ? 'bg-[#2B466B] text-[#FFB7C4]' : 'text-[#D9E3EF] hover:bg-[#1F3857] hover:text-white'
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
               }`
             }
           >
