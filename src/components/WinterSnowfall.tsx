@@ -36,18 +36,18 @@ export function WinterSnowfall() {
   if (prefersReducedMotion) {
     return (
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        {SNOW_PARTICLES.slice(0, 8).map((flake) => (
+        {SNOW_PARTICLES.slice(0, 6).map((flake) => (
           <span
             key={flake.id}
             style={{
               left: `${flake.leftPercent}%`,
               top: `${(flake.id * 11) % 80}%`,
-              width: flake.size,
-              height: flake.size,
-              opacity: flake.opacity * 0.75,
+              width: flake.size * 0.58,
+              height: flake.size * 0.58,
+              opacity: flake.opacity * 0.38,
               filter: flake.blurPx ? `blur(${flake.blurPx}px)` : undefined,
             }}
-            className="absolute block rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)]"
+            className="absolute block rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.65)]"
           />
         ))}
       </div>
@@ -56,14 +56,14 @@ export function WinterSnowfall() {
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      {SNOW_PARTICLES.map((flake) => (
+      {SNOW_PARTICLES.filter((flake) => flake.id <= 10).map((flake) => (
         <motion.span
           key={flake.id}
           initial={{ y: -20, x: 0, opacity: 0 }}
           animate={{
             y: [-20, 560],
             x: [0, flake.driftX * 0.55, flake.driftX],
-            opacity: [0, flake.opacity, flake.opacity * 0.9, 0],
+            opacity: [0, flake.opacity * 0.45, flake.opacity * 0.4, 0],
           }}
           transition={{
             duration: flake.duration,
@@ -74,11 +74,11 @@ export function WinterSnowfall() {
           style={{
             left: `${flake.leftPercent}%`,
             top: 0,
-            width: flake.size,
-            height: flake.size,
+            width: flake.size * 0.58,
+            height: flake.size * 0.58,
             filter: flake.blurPx ? `blur(${flake.blurPx}px)` : undefined,
           }}
-          className="absolute block rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.85)] will-change-transform"
+          className="absolute block rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.65)] will-change-transform"
         />
       ))}
     </div>
