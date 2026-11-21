@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowDownRight, ArrowRight, Snowflake } from 'lucide-react';
 import { HeroFlightAnimation } from './HeroFlightAnimation';
-import { HeroCloudLayer } from './HeroCloudLayer';
 import { campSchedule } from '../config/campConfig';
 import heroSkyBackdrop from '../assets/images/hero_sky_clouds_backdrop_1794915378609.jpg';
 
@@ -45,9 +44,6 @@ export function HeroSection() {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#FFFCF7] via-[#FFFCF7]/75 to-transparent"
       />
-
-      {/* Volumetric Drifting Clouds & Sunlight Glow */}
-      <HeroCloudLayer />
 
       {/* A single cinematic UAV scene, with no radar or faux-3D overlays. */}
       <HeroFlightAnimation />
