@@ -1,6 +1,12 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
-export function Navbar() {
+interface NavbarProps {
+  mobileOpen: boolean;
+  onToggleMobile: () => void;
+}
+
+export function Navbar({ mobileOpen, onToggleMobile }: NavbarProps) {
   const location = useLocation();
   const guideActive = location.pathname === '/' && location.hash === '#how-it-works';
 
@@ -20,7 +26,7 @@ export function Navbar() {
           AMC Winter Camp
         </Link>
 
-        <nav aria-label="Top navigation" className="hidden md:flex items-center gap-3 lg:gap-5">
+        <nav aria-label="Top navigation" className="hidden lg:flex items-center gap-3 lg:gap-5">
           <NavLink to="/" end className={({ isActive }) => navigationStyles(isActive && !location.hash)}>
             Home
           </NavLink>
@@ -45,12 +51,17 @@ export function Navbar() {
           </NavLink>
         </nav>
 
-        <Link
-          to="/#how-it-works"
-          className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#1E3A5F]/20 px-3 py-1.5 text-xs font-semibold text-[#1E3A5F] transition-colors hover:border-[#DE546A] hover:text-[#B8354B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] md:hidden"
+        <button
+          id="camp-mobile-menu-button"
+          type="button"
+          onClick={onToggleMobile}
+          aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-camp-navigation"
+          className="ml-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E5DEC9] bg-[#F8F5EE] text-[#13243C] transition-colors hover:border-[#DE546A] hover:bg-[#FDF1F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] lg:hidden"
         >
-          How It Works
-        </Link>
+          {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+        </button>
       </div>
     </header>
   );
