@@ -103,11 +103,19 @@ export function Navbar() {
         </nav>
 
         {/* Zone 3: Single Primary Action */}
-        <div className="flex items-center shrink-0">
+        <div className="flex items-center shrink-0 gap-2">
+          <NavLink
+            to="/setup"
+            className={({ isActive }) =>
+              `inline-flex items-center justify-center rounded-full px-3 py-1.5 text-xs font-semibold transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2 ${isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'bg-[#1E3A5F] text-[#FFFCF7] hover:bg-[#B8354B]'}`
+            }
+          >
+            Start Setup
+          </NavLink>
           <a
             href="/#roadmap"
             onClick={handleExploreRoadmapClick}
-            className="inline-flex items-center justify-center rounded-full bg-[#1E3A5F] px-4 py-1.5 text-xs font-semibold text-[#FFFCF7] transition-colors hover:bg-[#B8354B] whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2"
+            className="hidden sm:inline-flex items-center justify-center rounded-full border border-[#1E3A5F]/20 px-4 py-1.5 text-xs font-semibold text-[#1E3A5F] transition-colors hover:border-[#DE546A] hover:text-[#B8354B] whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2"
           >
             Roadmap
           </a>
