@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import {
+  BookOpen,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -26,10 +27,15 @@ const WEEK_ICONS: Record<WeekId, typeof Layers> = {
   3: Cpu,
 };
 
-export function Sidebar() {
+interface SidebarProps {
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
+}
+
+export function Sidebar({ mobileOpen, onCloseMobile }: SidebarProps) {
   const location = useLocation();
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
-  const [mobileExpanded, setMobileExpanded] = useState(false);
+  const drawerRef = useRef<HTMLElement>(null);
   const [expandedWeeks, setExpandedWeeks] = useState<Record<WeekId, boolean>>({
     1: true,
     2: false,
@@ -37,24 +43,32 @@ export function Sidebar() {
   });
 
   useEffect(() => {
-    setMobileExpanded(false);
+    onCloseMobile();
     const match = location.pathname.match(/^\/week\/([123])/);
     if (match) {
       const id = Number(match[1]) as WeekId;
       setExpandedWeeks((prev) => ({ ...prev, [id]: true }));
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.hash, onCloseMobile]);
 
   useEffect(() => {
-    if (!mobileExpanded) return;
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    drawerRef.current?.focus();
+
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setMobileExpanded(false);
-      }
+      if (e.key === 'Escape') onCloseMobile();
     }
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [mobileExpanded]);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      document.getElementById('camp-mobile-menu-button')?.focus();
+    };
+  }, [mobileOpen, onCloseMobile]);
 
   const toggleWeekGroup = (weekId: WeekId, isRail: boolean, onExpandSidebar: () => void) => {
     if (isRail) {
@@ -65,7 +79,7 @@ export function Sidebar() {
     setExpandedWeeks((prev) => ({ ...prev, [weekId]: !prev[weekId] }));
   };
 
-  const renderContent = (isRail: boolean, onToggle: () => void) => (
+  const renderContent = (isRail: boolean, onToggle: () => void, isMobile = false) => (
     <div className="flex h-full flex-col bg-[#13243C] text-[#F8F5EE] border-r border-[#243B5C]">
       {/* Sidebar Header */}
       <div
@@ -91,8 +105,8 @@ export function Sidebar() {
           type="button"
           onClick={onToggle}
           aria-expanded={!isRail}
-          aria-label={isRail ? 'Expand sidebar menu' : 'Collapse sidebar menu'}
-          title={isRail ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={isMobile ? 'Close navigation menu' : isRail ? 'Expand sidebar menu' : 'Collapse sidebar menu'}
+          title={isMobile ? 'Close navigation menu' : isRail ? 'Expand sidebar' : 'Collapse sidebar'}
           className={`inline-flex items-center justify-center rounded-md lg:rounded-lg border border-[#2B466B] bg-[#1B314F] text-[#F8F5EE] transition-colors hover:border-[#DE546A] hover:bg-[#233E63] hover:text-[#F48B9B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] ${
             isRail ? 'h-6 w-6 lg:h-9 lg:w-9' : 'h-9 w-9'
           }`}
@@ -114,6 +128,7 @@ export function Sidebar() {
       >
         <NavLink
           to="/"
+          onClick={isMobile ? onCloseMobile : undefined}
           end
           title={isRail ? 'Home' : undefined}
           className={({ isActive }) =>
@@ -139,8 +154,19 @@ export function Sidebar() {
           )}
         </NavLink>
 
+        <Link
+          to="/#how-it-works"
+          onClick={isMobile ? onCloseMobile : undefined}
+          className={`flex min-h-[42px] items-center rounded-lg border border-transparent px-3 text-sm font-medium text-[#D9D4C7] transition-colors hover:bg-[#1B314F] hover:text-[#FFFCF7] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] ${isRail ? 'justify-center px-0' : 'gap-3'}`}
+          title={isRail ? 'How It Works' : undefined}
+        >
+          <BookOpen className={`${isRail ? 'h-3.5 w-3.5 lg:h-4 lg:w-4' : 'h-4 w-4'} shrink-0 text-[#9FB2C9]`} aria-hidden="true" />
+          {!isRail && <span>How It Works</span>}
+        </Link>
+
         <NavLink
           to="/setup"
+          onClick={isMobile ? onCloseMobile : undefined}
           title={isRail ? 'Pre-Camp Setup' : undefined}
           className={({ isActive }) =>
             `flex min-h-[42px] items-center rounded-lg px-3 text-sm font-medium transition-colors ${
@@ -193,7 +219,6 @@ export function Sidebar() {
                 onClick={() =>
                   toggleWeekGroup(weekId, isRail, () => {
                     setDesktopCollapsed(false);
-                    setMobileExpanded(true);
                   })
                 }
                 aria-expanded={!isRail && isExpanded}
@@ -241,6 +266,7 @@ export function Sidebar() {
                     <NavLink
                       key={section.key}
                       to={`/week/${weekId}/${section.key}`}
+                      onClick={isMobile ? onCloseMobile : undefined}
                       className={({ isActive }) =>
                         `flex min-h-[36px] items-center justify-between rounded-md px-2.5 text-[13px] transition-colors ${
                           isActive
@@ -273,6 +299,7 @@ export function Sidebar() {
 
         <NavLink
           to="/leaderboard"
+          onClick={isMobile ? onCloseMobile : undefined}
           title={isRail ? 'Leaderboard' : undefined}
           className={({ isActive }) =>
             `flex min-h-[42px] items-center rounded-lg px-3 text-sm font-medium transition-colors ${
@@ -322,25 +349,24 @@ export function Sidebar() {
         {renderContent(desktopCollapsed, () => setDesktopCollapsed((prev) => !prev))}
       </aside>
 
-      <aside
-        aria-label="Permanent mobile sidebar rail"
-        className="lg:hidden shrink-0 sticky top-0 h-screen w-8 z-30"
-      >
-        {renderContent(true, () => setMobileExpanded(true))}
-      </aside>
-
-      {mobileExpanded && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div
-            className="fixed inset-0 bg-[#0A1424]/55 backdrop-blur-xs"
-            onClick={() => setMobileExpanded(false)}
-            aria-hidden="true"
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end lg:hidden">
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            className="fixed inset-0 cursor-default bg-[#0A1424]/55 backdrop-blur-xs"
+            onClick={onCloseMobile}
           />
           <aside
-            aria-label="Expanded mobile sidebar navigation"
-            className="relative z-10 h-full w-60 max-w-[75vw] shadow-xl"
+            id="mobile-camp-navigation"
+            ref={drawerRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Camp navigation menu"
+            className="relative z-10 h-full w-80 max-w-[85vw] shadow-2xl outline-none"
           >
-            {renderContent(false, () => setMobileExpanded(false))}
+            {renderContent(false, onCloseMobile, true)}
           </aside>
         </div>
       )}
