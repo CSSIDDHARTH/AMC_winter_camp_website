@@ -347,7 +347,7 @@ export function Roadmap() {
                     </span>
                     <span aria-hidden="true" className="text-[#C8BFA8]">·</span>
                     <span className="font-mono text-xs font-medium text-[#B8354B]">
-                      {campConfig.preCamp.shortDateLabel} ({campConfig.preCamp.dateLabel})
+                      {campConfig.preCamp.shortDateLabel}
                     </span>
                     <StatusBadge released={campConfig.preCamp.released} />
                   </div>
