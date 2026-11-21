@@ -1,13 +1,27 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { ArrowDownRight, ArrowRight, Snowflake } from 'lucide-react';
+import { ArrowDownRight, Snowflake } from 'lucide-react';
+import { WinterSnowfall } from './WinterSnowfall';
 import { HeroFlightAnimation } from './HeroFlightAnimation';
+import { HeroCloudLayer } from './HeroCloudLayer';
 import { campSchedule } from '../config/campConfig';
 import heroSkyBackdrop from '../assets/images/hero_sky_clouds_backdrop_1794915378609.jpg';
 
 export function HeroSection() {
   const [backdropError, setBackdropError] = useState(false);
+  const parallaxRef = useRef({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2; // -1..1
+    const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2; // -1..1
+    parallaxRef.current = { x: nx, y: ny };
+  };
+
+  const handleMouseLeave = () => {
+    parallaxRef.current = { x: 0, y: 0 };
+  };
+
   const handleScrollToRoadmap = () => {
     const roadmap = document.getElementById('roadmap');
     roadmap?.scrollIntoView({ behavior: 'smooth' });
@@ -15,6 +29,8 @@ export function HeroSection() {
 
   return (
     <section
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="relative overflow-hidden border-b border-[#E5DEC9] bg-gradient-to-b from-[#BFD8F0] via-[#DFECF7] to-[#FFFCF7]"
     >
       {/* Expansive Sky & Sunlit Clouds Backdrop Image */}
@@ -45,8 +61,37 @@ export function HeroSection() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#FFFCF7] via-[#FFFCF7]/75 to-transparent"
       />
 
-      {/* A single cinematic UAV scene, with no radar or faux-3D overlays. */}
-      <HeroFlightAnimation />
+      {/* Volumetric Drifting Clouds & Sunlight Glow */}
+      <HeroCloudLayer />
+
+      {/* Subtle High-Altitude Trajectory Arcs */}
+      <svg
+        viewBox="0 0 1200 540"
+        className="pointer-events-none absolute inset-0 h-full w-full text-[#1E3A5F]/12"
+        fill="none"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <path
+          d="M -40 365 C 260 310, 560 135, 1020 142"
+          stroke="currentColor"
+          strokeDasharray="5 7"
+          strokeWidth="1.4"
+        />
+        <path
+          d="M 180 455 C 480 395, 790 275, 1210 175"
+          stroke="#DE546A"
+          strokeOpacity="0.22"
+          strokeDasharray="4 7"
+          strokeWidth="1.2"
+        />
+      </svg>
+
+      {/* Realistic 3D-Perspective Flying Drones & Autonomous UAV */}
+      <HeroFlightAnimation parallaxRef={parallaxRef} />
+
+      {/* Multi-Depth Winter Snow Particles */}
+      <WinterSnowfall />
 
       <div className="relative z-20 mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 lg:px-8 lg:pt-36 lg:pb-28">
         <motion.div
@@ -95,25 +140,15 @@ export function HeroSection() {
               and engineering component selection through structured learning and hands-on challenges.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
-              <Link
-                to="/setup"
-                className="group inline-flex items-center justify-center gap-2.5 rounded-lg bg-[#1E3A5F] px-6 py-3.5 text-sm font-semibold text-[#FFFCF7] shadow-[0_10px_26px_-8px_rgba(30,58,95,0.5)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[#B8354B] hover:shadow-[0_14px_30px_-10px_rgba(184,53,75,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2"
-              >
-                <span>Start Pre-Camp Setup</span>
-                <ArrowRight
-                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </Link>
+            <div className="pt-2">
               <button
                 type="button"
                 onClick={handleScrollToRoadmap}
-                className="group inline-flex items-center justify-center gap-2.5 rounded-lg border border-[#1E3A5F]/25 bg-[#FFFCF7]/80 px-6 py-3.5 text-sm font-semibold text-[#1E3A5F] shadow-sm backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#DE546A] hover:bg-[#FFFCF7] hover:text-[#B8354B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2"
+                className="group inline-flex items-center gap-2.5 rounded-md bg-[#1E3A5F] px-6 py-3.5 text-sm font-semibold text-[#FFFCF7] shadow-[0_8px_20px_-6px_rgba(30,58,95,0.45)] transition-all duration-150 hover:-translate-y-0.5 hover:bg-[#B8354B] hover:shadow-[0_10px_24px_-6px_rgba(184,53,75,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F8F5EE]"
               >
                 <span>Explore the Roadmap</span>
                 <ArrowDownRight
-                  className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-0.5"
+                  className="h-4 w-4 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:translate-y-0.5"
                   aria-hidden="true"
                 />
               </button>
