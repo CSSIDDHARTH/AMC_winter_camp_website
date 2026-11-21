@@ -39,10 +39,10 @@ function AppShell() {
 
   return (
     <div className="flex min-h-screen bg-[#F8F5EE] text-[#13243C]">
-      <Sidebar mobileOpen={mobileMenuOpen} onCloseMobile={closeMobileMenu} />
+      <Sidebar mobileOpen={mobileMenuOpen} onCloseMobile={closeMobileMenu} onToggleMobile={() => setMobileMenuOpen((open) => !open)} />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Navbar mobileOpen={mobileMenuOpen} onToggleMobile={() => setMobileMenuOpen((open) => !open)} />
+      <div className="flex min-w-0 flex-1 flex-col pb-20 lg:pb-0">
+        <Navbar />
 
         <main className={isHome ? '-mt-13 flex-1' : 'flex-1'}>
           <Routes>
