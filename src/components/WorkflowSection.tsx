@@ -100,7 +100,7 @@ export function WorkflowSection() {
   const bottomRow = WORKFLOW_STEPS.slice(3, 5);
 
   return (
-    <section className="border-b border-[#E5DEC9] bg-[#FFFCF7]">
+    <section id="how-it-works" className="scroll-mt-24 border-b border-[#E5DEC9] bg-[#FFFCF7]">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
         <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="max-w-2xl space-y-3">
