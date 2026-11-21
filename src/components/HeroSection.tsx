@@ -5,6 +5,7 @@ import { WinterSnowfall } from './WinterSnowfall';
 import { HeroFlightAnimation } from './HeroFlightAnimation';
 import { HeroCloudLayer } from './HeroCloudLayer';
 import { campSchedule } from '../config/campConfig';
+import heroSkyBackdrop from '../assets/images/hero_sky_clouds_backdrop_1794915378609.jpg';
 
 export function HeroSection() {
   const [backdropError, setBackdropError] = useState(false);
@@ -35,7 +36,7 @@ export function HeroSection() {
       {/* Expansive Sky & Sunlit Clouds Backdrop Image */}
       {!backdropError && (
         <img
-          src="/src/assets/images/hero_sky_clouds_backdrop_1794915378609.jpg"
+          src={heroSkyBackdrop}
           alt=""
           aria-hidden="true"
           referrerPolicy="no-referrer"

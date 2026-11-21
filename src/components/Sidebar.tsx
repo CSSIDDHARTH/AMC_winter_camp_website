@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import {
   ChevronDown,
@@ -11,6 +11,7 @@ import {
   Network,
   Trophy,
   Wrench,
+  X,
 } from 'lucide-react';
 import { campConfig, campSchedule, WEEK_IDS, WeekId } from '../config/campConfig';
 
@@ -26,10 +27,17 @@ const WEEK_ICONS: Record<WeekId, typeof Layers> = {
   3: Cpu,
 };
 
-export function Sidebar() {
+interface SidebarProps {
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
+  onToggleMobile: () => void;
+}
+
+export function Sidebar({ mobileOpen, onCloseMobile, onToggleMobile }: SidebarProps) {
   const location = useLocation();
   const [desktopCollapsed, setDesktopCollapsed] = useState(false);
-  const [mobileExpanded, setMobileExpanded] = useState(false);
+  const drawerRef = useRef<HTMLElement>(null);
+  const lastMenuTriggerRef = useRef<HTMLElement | null>(null);
   const [expandedWeeks, setExpandedWeeks] = useState<Record<WeekId, boolean>>({
     1: true,
     2: false,
@@ -37,24 +45,34 @@ export function Sidebar() {
   });
 
   useEffect(() => {
-    setMobileExpanded(false);
+    onCloseMobile();
     const match = location.pathname.match(/^\/week\/([123])/);
     if (match) {
       const id = Number(match[1]) as WeekId;
       setExpandedWeeks((prev) => ({ ...prev, [id]: true }));
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.hash, onCloseMobile]);
 
   useEffect(() => {
-    if (!mobileExpanded) return;
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    lastMenuTriggerRef.current =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    document.body.style.overflow = 'hidden';
+    drawerRef.current?.focus();
+
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setMobileExpanded(false);
-      }
+      if (e.key === 'Escape') onCloseMobile();
     }
+
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [mobileExpanded]);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      lastMenuTriggerRef.current?.focus();
+    };
+  }, [mobileOpen, onCloseMobile]);
 
   const toggleWeekGroup = (weekId: WeekId, isRail: boolean, onExpandSidebar: () => void) => {
     if (isRail) {
@@ -65,7 +83,7 @@ export function Sidebar() {
     setExpandedWeeks((prev) => ({ ...prev, [weekId]: !prev[weekId] }));
   };
 
-  const renderContent = (isRail: boolean, onToggle: () => void) => (
+  const renderContent = (isRail: boolean, onToggle: () => void, isMobile = false) => (
     <div className="flex h-full flex-col bg-[#13243C] text-[#F8F5EE] border-r border-[#243B5C]">
       {/* Sidebar Header */}
       <div
@@ -76,6 +94,7 @@ export function Sidebar() {
         {!isRail && (
           <Link
             to="/"
+            onClick={isMobile ? onCloseMobile : undefined}
             className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-[#FFFCF7] whitespace-nowrap overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] rounded"
           >
             <img
@@ -91,13 +110,15 @@ export function Sidebar() {
           type="button"
           onClick={onToggle}
           aria-expanded={!isRail}
-          aria-label={isRail ? 'Expand sidebar menu' : 'Collapse sidebar menu'}
-          title={isRail ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={isMobile ? 'Close navigation menu' : isRail ? 'Expand sidebar menu' : 'Collapse sidebar menu'}
+          title={isMobile ? 'Close navigation menu' : isRail ? 'Expand sidebar' : 'Collapse sidebar'}
           className={`inline-flex items-center justify-center rounded-md lg:rounded-lg border border-[#2B466B] bg-[#1B314F] text-[#F8F5EE] transition-colors hover:border-[#DE546A] hover:bg-[#233E63] hover:text-[#F48B9B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#DE546A] ${
             isRail ? 'h-6 w-6 lg:h-9 lg:w-9' : 'h-9 w-9'
           }`}
         >
-          {isRail ? (
+          {isMobile ? (
+            <X className="h-4 w-4" aria-hidden="true" />
+          ) : isRail ? (
             <ChevronRight className="h-3.5 w-3.5 lg:h-4 lg:w-4" aria-hidden="true" />
           ) : (
             <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -114,6 +135,7 @@ export function Sidebar() {
       >
         <NavLink
           to="/"
+          onClick={isMobile ? onCloseMobile : undefined}
           end
           title={isRail ? 'Home' : undefined}
           className={({ isActive }) =>
@@ -141,6 +163,7 @@ export function Sidebar() {
 
         <NavLink
           to="/setup"
+          onClick={isMobile ? onCloseMobile : undefined}
           title={isRail ? 'Pre-Camp Setup' : undefined}
           className={({ isActive }) =>
             `flex min-h-[42px] items-center rounded-lg px-3 text-sm font-medium transition-colors ${
@@ -193,7 +216,6 @@ export function Sidebar() {
                 onClick={() =>
                   toggleWeekGroup(weekId, isRail, () => {
                     setDesktopCollapsed(false);
-                    setMobileExpanded(true);
                   })
                 }
                 aria-expanded={!isRail && isExpanded}
@@ -241,6 +263,7 @@ export function Sidebar() {
                     <NavLink
                       key={section.key}
                       to={`/week/${weekId}/${section.key}`}
+                      onClick={isMobile ? onCloseMobile : undefined}
                       className={({ isActive }) =>
                         `flex min-h-[36px] items-center justify-between rounded-md px-2.5 text-[13px] transition-colors ${
                           isActive
@@ -273,6 +296,7 @@ export function Sidebar() {
 
         <NavLink
           to="/leaderboard"
+          onClick={isMobile ? onCloseMobile : undefined}
           title={isRail ? 'Leaderboard' : undefined}
           className={({ isActive }) =>
             `flex min-h-[42px] items-center rounded-lg px-3 text-sm font-medium transition-colors ${
@@ -322,25 +346,88 @@ export function Sidebar() {
         {renderContent(desktopCollapsed, () => setDesktopCollapsed((prev) => !prev))}
       </aside>
 
-      <aside
-        aria-label="Permanent mobile sidebar rail"
-        className="lg:hidden shrink-0 sticky top-0 h-screen w-8 z-30"
+      {/* Mobile bottom navigation. Desktop keeps its collapsible left sidebar. */}
+      <nav
+        aria-label="Mobile bottom navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#E5DEC9] bg-[#FFFCF7]/98 text-[#13243C] shadow-[0_-8px_28px_-14px_rgba(19,36,60,0.22)] lg:hidden"
+        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
       >
-        {renderContent(true, () => setMobileExpanded(true))}
-      </aside>
+        <div className="mx-auto grid max-w-xl grid-cols-4 items-stretch px-2 pt-2">
+          <NavLink
+            to="/"
+            end
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+              }`
+            }
+          >
+            <Home className="h-5 w-5" aria-hidden="true" />
+            <span>Home</span>
+          </NavLink>
+          <NavLink
+            to="/setup"
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+              }`
+            }
+          >
+            <Wrench className="h-5 w-5" aria-hidden="true" />
+            <span>Pre-Camp</span>
+          </NavLink>
+          <button
+            id="camp-mobile-modules-button"
+            type="button"
+            onClick={onToggleMobile}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-camp-navigation"
+            aria-label="Open weekly module navigation"
+            className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+              mobileOpen || location.pathname.startsWith('/week/')
+                ? 'bg-[#FDF1F3] text-[#B8354B]'
+                : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+            }`}
+          >
+            <Layers className="h-5 w-5" aria-hidden="true" />
+            <span>Weeks</span>
+          </button>
+          <NavLink
+            to="/leaderboard"
+            onClick={onCloseMobile}
+            className={({ isActive }) =>
+              `flex min-h-12 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] ${
+                isActive ? 'bg-[#FDF1F3] text-[#B8354B]' : 'text-[#5A6C84] hover:bg-[#F8F5EE] hover:text-[#13243C]'
+              }`
+            }
+          >
+            <Trophy className="h-5 w-5" aria-hidden="true" />
+            <span>Leaderboard</span>
+          </NavLink>
+        </div>
+      </nav>
 
-      {mobileExpanded && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div
-            className="fixed inset-0 bg-[#0A1424]/55 backdrop-blur-xs"
-            onClick={() => setMobileExpanded(false)}
-            aria-hidden="true"
+      {/* The existing full navigation, now revealed as a bottom sheet on mobile. */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <button
+            type="button"
+            aria-label="Close weekly navigation"
+            className="absolute inset-0 h-full w-full cursor-default bg-[#0A1424]/55 backdrop-blur-xs"
+            onClick={onCloseMobile}
           />
           <aside
-            aria-label="Expanded mobile sidebar navigation"
-            className="relative z-10 h-full w-60 max-w-[75vw] shadow-xl"
+            id="mobile-camp-navigation"
+            ref={drawerRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Camp navigation menu"
+            className="absolute inset-x-0 bottom-0 mx-auto h-[min(78dvh,720px)] max-w-xl overflow-hidden rounded-t-3xl shadow-2xl outline-none"
           >
-            {renderContent(false, () => setMobileExpanded(false))}
+            {renderContent(false, onCloseMobile, true)}
           </aside>
         </div>
       )}

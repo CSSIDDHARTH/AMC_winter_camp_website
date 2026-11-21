@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { MotionConfig } from 'motion/react';
 import { Navbar } from './components/Navbar';
@@ -34,13 +34,15 @@ function ScrollHandler() {
 function AppShell() {
   const { pathname } = useLocation();
   const isHome = pathname === '/';
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
   return (
     <div className="flex min-h-screen bg-[#F8F5EE] text-[#13243C]">
-      <Sidebar />
+      <Sidebar mobileOpen={mobileMenuOpen} onCloseMobile={closeMobileMenu} onToggleMobile={() => setMobileMenuOpen((open) => !open)} />
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <Navbar />
+      <div className="flex min-w-0 flex-1 flex-col pb-20 lg:pb-0">
+        <Navbar mobileOpen={mobileMenuOpen} onToggleMobile={() => setMobileMenuOpen((open) => !open)} />
 
         <main className={isHome ? '-mt-13 flex-1' : 'flex-1'}>
           <Routes>

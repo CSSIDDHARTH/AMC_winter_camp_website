@@ -15,20 +15,7 @@ import {
 } from '../components/setup/SetupChecklist';
 import { TroubleshootingSection } from '../components/setup/TroubleshootingSection';
 
-const STEP_STORAGE_KEY = 'amc_wc2026_setup_steps_v1';
 const CHECKLIST_STORAGE_KEY = 'amc_wc2026_setup_checklist_v1';
-
-interface StepVerificationState {
-  cad: boolean;
-  ubuntu: boolean;
-  ros2: boolean;
-}
-
-const DEFAULT_STEP_STATE: StepVerificationState = {
-  cad: false,
-  ubuntu: false,
-  ros2: false,
-};
 
 const DEFAULT_CHECKLIST_STATE: boolean[] = FINAL_CHECKLIST_ITEMS.map(() => false);
 
@@ -85,23 +72,12 @@ function loadFromStorage<T>(key: string, fallback: T): T {
 export function SetupPage() {
   const { preCamp } = campConfig;
 
-  const [stepVerified, setStepVerified] = useState<StepVerificationState>(() =>
-    loadFromStorage(STEP_STORAGE_KEY, DEFAULT_STEP_STATE)
-  );
   const [checklist, setChecklist] = useState<boolean[]>(() => {
     const saved = loadFromStorage<boolean[]>(CHECKLIST_STORAGE_KEY, DEFAULT_CHECKLIST_STATE);
     return Array.isArray(saved) && saved.length === FINAL_CHECKLIST_ITEMS.length
       ? saved
       : DEFAULT_CHECKLIST_STATE;
   });
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(STEP_STORAGE_KEY, JSON.stringify(stepVerified));
-    } catch {
-      // Ignore storage write errors in restricted browsing modes
-    }
-  }, [stepVerified]);
 
   useEffect(() => {
     try {
@@ -124,12 +100,27 @@ export function SetupPage() {
   };
 
   const resetChecklist = () => {
-    setChecklist(DEFAULT_CHECKLIST_STATE);
+    setChecklist(FINAL_CHECKLIST_ITEMS.map(() => false));
     try {
       window.localStorage.removeItem(CHECKLIST_STORAGE_KEY);
     } catch {
       // Ignore storage removal errors
     }
+  };
+
+  // The three stage badges and verification checkpoints use the same checklist state.
+  // A stage is complete only once every relevant verification has been checked.
+  const stepVerified = {
+    cad: checklist[0] && checklist[1],
+    ubuntu: checklist[2] && checklist[3],
+    ros2: checklist[4] && checklist[5] && checklist[6],
+  };
+
+  const toggleStage = (indices: number[]) => {
+    setChecklist((prev) => {
+      const allChecked = indices.every((index) => prev[index]);
+      return prev.map((item, index) => indices.includes(index) ? !allChecked : item);
+    });
   };
 
   const stageProgress = [
@@ -369,7 +360,7 @@ export function SetupPage() {
               checkboxLabel="I have installed and tested my CAD software."
               checked={stepVerified.cad}
               onToggle={() =>
-                setStepVerified((prev) => ({ ...prev, cad: !prev.cad }))
+                toggleStage([0, 1])
               }
             />
           </SetupStep>
@@ -408,7 +399,7 @@ export function SetupPage() {
               checkboxLabel="My Ubuntu 22.04 environment is ready."
               checked={stepVerified.ubuntu}
               onToggle={() =>
-                setStepVerified((prev) => ({ ...prev, ubuntu: !prev.ubuntu }))
+                toggleStage([2, 3])
               }
             />
           </SetupStep>
@@ -475,7 +466,7 @@ export function SetupPage() {
               checkboxLabel="I have installed ROS 2 and verified the required simulation tools."
               checked={stepVerified.ros2}
               onToggle={() =>
-                setStepVerified((prev) => ({ ...prev, ros2: !prev.ros2 }))
+                toggleStage([4, 5, 6])
               }
             />
           </SetupStep>
