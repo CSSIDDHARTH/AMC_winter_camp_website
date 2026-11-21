@@ -1,6 +1,12 @@
 import { Link, NavLink } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
-export function Navbar() {
+interface NavbarProps {
+  mobileOpen: boolean;
+  onToggleMobile: () => void;
+}
+
+export function Navbar({ mobileOpen, onToggleMobile }: NavbarProps) {
   const navigationStyles = (isActive: boolean) =>
     `text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
       isActive
@@ -39,12 +45,18 @@ export function Navbar() {
           </NavLink>
         </nav>
 
-        <Link
-          to="/setup"
-          className="inline-flex items-center justify-center rounded-full border border-[#1E3A5F]/20 bg-[#F8F5EE] px-3.5 py-1.5 text-xs font-semibold text-[#1E3A5F] transition-colors hover:border-[#DE546A] hover:text-[#B8354B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] lg:hidden"
+        <button
+          id="camp-mobile-menu-button"
+          type="button"
+          onClick={onToggleMobile}
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-camp-navigation"
+          aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          className="ml-auto inline-flex h-10 items-center justify-center gap-2 rounded-full border border-[#1E3A5F]/20 bg-[#F8F5EE] px-3.5 text-xs font-semibold text-[#1E3A5F] transition-colors hover:border-[#DE546A] hover:bg-[#FDF1F3] hover:text-[#B8354B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] lg:hidden"
         >
-          Pre-Camp Setup
-        </Link>
+          {mobileOpen ? <X className="h-4 w-4" aria-hidden="true" /> : <Menu className="h-4 w-4" aria-hidden="true" />}
+          <span>Menu</span>
+        </button>
       </div>
     </header>
   );
