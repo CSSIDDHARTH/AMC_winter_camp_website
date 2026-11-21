@@ -91,8 +91,8 @@ export function HeroCloudLayer() {
       {/* High-altitude cirrus cloud veil drifting slowly left-to-right */}
       <motion.div
         initial={{ x: '-20%', opacity: 0 }}
-        animate={{ x: ['-20%', '112%'], opacity: [0, 0.72, 0.72, 0] }}
-        transition={{ duration: 64, repeat: Infinity, ease: 'linear' }}
+        animate={{ x: ['-20%', '112%'], opacity: [0, 0.34, 0.34, 0] }}
+        transition={{ duration: 96, repeat: Infinity, ease: 'linear' }}
         className="absolute top-[4%] left-0 will-change-transform"
       >
         <VolumetricCloud
@@ -107,8 +107,8 @@ export function HeroCloudLayer() {
       {/* Mid-sky sunlit cumulus drifting smoothly */}
       <motion.div
         initial={{ x: '25%', opacity: 0 }}
-        animate={{ x: ['-30%', '115%'], opacity: [0, 0.65, 0.68, 0] }}
-        transition={{ duration: 52, delay: 6, repeat: Infinity, ease: 'linear' }}
+        animate={{ x: ['-30%', '115%'], opacity: [0, 0.40, 0.42, 0] }}
+        transition={{ duration: 78, delay: 6, repeat: Infinity, ease: 'linear' }}
         className="absolute top-[28%] left-0 will-change-transform"
       >
         <VolumetricCloud
@@ -123,10 +123,10 @@ export function HeroCloudLayer() {
       {/* Foreground lower horizon cloud bank gently breathing in the breeze */}
       <motion.div
         animate={{
-          x: [-24, 28, -24],
-          y: [0, -6, 0],
+          x: [-14, 16, -14],
+          y: [0, -3, 0],
         }}
-        transition={{ duration: 22, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 32, repeat: Infinity, ease: 'easeInOut' }}
         className="absolute -bottom-14 right-[-4%] sm:right-[4%] will-change-transform"
       >
         <VolumetricCloud
