@@ -1,19 +1,11 @@
-import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
 
-interface NavbarProps {
-  mobileOpen: boolean;
-  onToggleMobile: () => void;
-}
-
-export function Navbar({ mobileOpen, onToggleMobile }: NavbarProps) {
-  const location = useLocation();
-  const guideActive = location.pathname === '/' && location.hash === '#how-it-works';
-
+export function Navbar() {
   const navigationStyles = (isActive: boolean) =>
-    `text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${isActive
-      ? 'border-[#DE546A] text-[#13243C]'
-      : 'border-transparent text-[#4B5E77] hover:text-[#13243C]'
+    `text-sm font-medium transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
+      isActive
+        ? 'border-[#DE546A] text-[#13243C]'
+        : 'border-transparent text-[#4B5E77] hover:text-[#13243C]'
     } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] rounded-sm`;
 
   return (
@@ -27,16 +19,12 @@ export function Navbar({ mobileOpen, onToggleMobile }: NavbarProps) {
         </Link>
 
         <nav aria-label="Top navigation" className="hidden lg:flex items-center gap-3 lg:gap-5">
-          <NavLink to="/" end className={({ isActive }) => navigationStyles(isActive && !location.hash)}>
+          <NavLink to="/" end className={({ isActive }) => navigationStyles(isActive)}>
             Home
           </NavLink>
-          <Link
-            to="/#how-it-works"
-            aria-current={guideActive ? 'location' : undefined}
-            className={navigationStyles(guideActive)}
-          >
-            How It Works
-          </Link>
+          <NavLink to="/setup" className={({ isActive }) => navigationStyles(isActive)}>
+            Pre-Camp Setup
+          </NavLink>
           <NavLink to="/week/1" className={({ isActive }) => navigationStyles(isActive)}>
             Week 1
           </NavLink>
@@ -51,17 +39,12 @@ export function Navbar({ mobileOpen, onToggleMobile }: NavbarProps) {
           </NavLink>
         </nav>
 
-        <button
-          id="camp-mobile-menu-button"
-          type="button"
-          onClick={onToggleMobile}
-          aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-camp-navigation"
-          className="ml-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#E5DEC9] bg-[#F8F5EE] text-[#13243C] transition-colors hover:border-[#DE546A] hover:bg-[#FDF1F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] lg:hidden"
+        <Link
+          to="/setup"
+          className="inline-flex items-center justify-center rounded-full border border-[#1E3A5F]/20 bg-[#F8F5EE] px-3.5 py-1.5 text-xs font-semibold text-[#1E3A5F] transition-colors hover:border-[#DE546A] hover:text-[#B8354B] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1E3A5F] lg:hidden"
         >
-          {mobileOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
-        </button>
+          Pre-Camp Setup
+        </Link>
       </div>
     </header>
   );
