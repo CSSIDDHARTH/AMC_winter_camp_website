@@ -1,8 +1,7 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowDownRight, ArrowRight, Snowflake } from 'lucide-react';
-import { WinterSnowfall } from './WinterSnowfall';
 import { HeroFlightAnimation } from './HeroFlightAnimation';
 import { HeroCloudLayer } from './HeroCloudLayer';
 import { campSchedule } from '../config/campConfig';
@@ -10,19 +9,6 @@ import heroSkyBackdrop from '../assets/images/hero_sky_clouds_backdrop_179491537
 
 export function HeroSection() {
   const [backdropError, setBackdropError] = useState(false);
-  const parallaxRef = useRef({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 2; // -1..1
-    const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 2; // -1..1
-    parallaxRef.current = { x: nx, y: ny };
-  };
-
-  const handleMouseLeave = () => {
-    parallaxRef.current = { x: 0, y: 0 };
-  };
-
   const handleScrollToRoadmap = () => {
     const roadmap = document.getElementById('roadmap');
     roadmap?.scrollIntoView({ behavior: 'smooth' });
@@ -30,8 +16,6 @@ export function HeroSection() {
 
   return (
     <section
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className="relative overflow-hidden border-b border-[#E5DEC9] bg-gradient-to-b from-[#BFD8F0] via-[#DFECF7] to-[#FFFCF7]"
     >
       {/* Expansive Sky & Sunlit Clouds Backdrop Image */}
@@ -65,34 +49,8 @@ export function HeroSection() {
       {/* Volumetric Drifting Clouds & Sunlight Glow */}
       <HeroCloudLayer />
 
-      {/* Subtle High-Altitude Trajectory Arcs */}
-      <svg
-        viewBox="0 0 1200 540"
-        className="pointer-events-none absolute inset-0 h-full w-full text-[#1E3A5F]/12"
-        fill="none"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-      >
-        <path
-          d="M -40 365 C 260 310, 560 135, 1020 142"
-          stroke="currentColor"
-          strokeDasharray="5 7"
-          strokeWidth="1.4"
-        />
-        <path
-          d="M 180 455 C 480 395, 790 275, 1210 175"
-          stroke="#DE546A"
-          strokeOpacity="0.22"
-          strokeDasharray="4 7"
-          strokeWidth="1.2"
-        />
-      </svg>
-
-      {/* Realistic 3D-Perspective Flying Drones & Autonomous UAV */}
-      <HeroFlightAnimation parallaxRef={parallaxRef} />
-
-      {/* Multi-Depth Winter Snow Particles */}
-      <WinterSnowfall />
+      {/* A single cinematic UAV scene, with no radar or faux-3D overlays. */}
+      <HeroFlightAnimation />
 
       <div className="relative z-20 mx-auto max-w-6xl px-4 pt-28 pb-16 sm:px-6 sm:pt-32 sm:pb-24 lg:px-8 lg:pt-36 lg:pb-28">
         <motion.div
