@@ -29,12 +29,11 @@ export function HeroFlightAnimation() {
           draggable={false}
           decoding="async"
           className="absolute inset-0 h-full w-full object-cover object-[55%_40%] saturate-[0.88] contrast-[1.02]"
-          initial={reducedMotion ? false : { opacity: 0, scale: 1.08 }}
+          initial={false}
           animate={
             reducedMotion
               ? undefined
               : {
-                  opacity: 1,
                   scale: [1.04, 1.095, 1.04],
                   x: [0, -18, 0],
                   y: [0, 7, 0],
